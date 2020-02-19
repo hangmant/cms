@@ -16,8 +16,7 @@ import NextLink from 'next/link'
 import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
 import { useQuery } from '@apollo/react-hooks'
-import gql from 'graphql-tag'
-import { GET_WORDS } from '../apollo/queries'
+import { GET_WORDS } from '../../apollo/queries'
 
 const columns = [
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
