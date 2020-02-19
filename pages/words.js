@@ -15,6 +15,9 @@ import EditIcon from '@material-ui/icons/Edit'
 import NextLink from 'next/link'
 import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import { GET_WORDS } from '../apollo/queries'
 
 const columns = [
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
@@ -67,6 +70,9 @@ export default function Words() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+
+  const { data } = useQuery(GET_WORDS)
+  console.log('Dante: Words -> data', data)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

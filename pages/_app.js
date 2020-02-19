@@ -1,37 +1,49 @@
-import React from 'react';
-import App from 'next/app';
-import Head from 'next/head';
-import { ThemeProvider } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../src/theme';
-import Layout from '../src/Layout'
+import React from 'react'
+import App from 'next/app'
+import Head from 'next/head'
+import { ThemeProvider } from '@material-ui/core/styles'
+import withApollo from 'next-with-apollo'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import theme from '../src/theme'
+import { ApolloProvider } from '@apollo/react-hooks'
+import ApolloClient, { InMemoryCache } from 'apollo-boost'
 
-export default class MyApp extends App {
+import Layout from '../src/Layout'
+class MyApp extends App {
   componentDidMount() {
     // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector('#jss-server-side');
+    const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles) {
-      jssStyles.parentElement.removeChild(jssStyles);
+      jssStyles.parentElement.removeChild(jssStyles)
     }
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, apollo } = this.props
 
     return (
-      <React.Fragment>
-        <Head>
-          <title>My page</title>
-          <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        </Head>
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ThemeProvider>
-      </React.Fragment>
-    );
+      <ApolloProvider client={apollo}>
+        <React.Fragment>
+          <Head>
+            <title>My page</title>
+            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+          </Head>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ThemeProvider>
+        </React.Fragment>
+      </ApolloProvider>
+    )
   }
 }
+
+export default withApollo(({ initialState }) => {
+  return new ApolloClient({
+    uri: 'http://localhost:8087/graphql',
+    cache: new InMemoryCache().restore(initialState || {}),
+  })
+})(MyApp)
