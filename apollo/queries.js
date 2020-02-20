@@ -13,3 +13,13 @@ export const GET_WORDS = gql`
     }
   }
 `
+
+export const GET_CATEGORIES = gql`
+  query categories {
+    categories {
+      _id
+      name
+      description
+    }
+  }
+`

@@ -4,40 +4,30 @@ import { makeStyles, Button } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { CREATE_WORD_MUTATION } from '../../apollo/mutations'
+import { GET_CATEGORIES } from '../../apollo/queries'
+import { get } from 'lodash'
 
 const NewWord = () => {
   const classes = useStyles()
 
-  const [open, setOpen] = React.useState(false)
-  const [options, setOptions] = React.useState([])
-  const loading = open && options.length === 0
-
+  const { data, loading } = useQuery(GET_CATEGORIES)
   const [createWord] = useMutation(CREATE_WORD_MUTATION)
 
-  React.useEffect(() => {
-    if (!loading) {
-      return undefined
-    }
-
-    return () => {
-      active = false
-    }
-  }, [loading])
+  const categories = get(data, 'categories', [])
 
   const handleSubmit = async values => {
     await createWord({
       variables: {
         data: {
           name: values.name,
-          categoryId: '5e4e1539eb20af58904c0a3a',
+          categoryId: values.category._id,
         },
       },
     })
-    console.log('Dante: handleSubmit -> values', values)
   }
 
   return (
@@ -49,7 +39,7 @@ const NewWord = () => {
       <Formik
         initialValues={{
           name: '',
-          categoryId: '',
+          category: null,
         }}
         onSubmit={handleSubmit}
         // validationSchema={Yup.object().shape({
@@ -59,7 +49,9 @@ const NewWord = () => {
         // })}
       >
         {props => {
-          const { values, handleChange, handleSubmit } = props
+          const { values, handleChange, handleSubmit, setFieldValue } = props
+
+          const handleChangeCategory = (_, value) => setFieldValue('category', value)
 
           return (
             <form onSubmit={handleSubmit}>
@@ -72,18 +64,12 @@ const NewWord = () => {
                 variant="outlined"
               />
               <Autocomplete
-                id="asynchronous-demo"
                 style={{ width: '100%', margin: '20px 0' }}
-                open={open}
-                onOpen={() => {
-                  setOpen(true)
-                }}
-                onClose={() => {
-                  setOpen(false)
-                }}
+                id="category"
+                onChange={handleChangeCategory}
                 getOptionSelected={(option, value) => option.name === value.name}
                 getOptionLabel={option => option.name}
-                options={options}
+                options={categories}
                 loading={loading}
                 renderInput={params => (
                   <TextField
@@ -106,7 +92,6 @@ const NewWord = () => {
 
               <Button
                 type="submit"
-                // onClick={() => handleSubmit()}
                 variant="contained"
                 color="primary"
                 className={classes.button}
