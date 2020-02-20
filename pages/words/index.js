@@ -68,10 +68,11 @@ const useStyles = makeStyles(theme => ({
 export default function Words() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [rowsPerPage, setRowsPerPage] = React.useState(100)
 
   const { data } = useQuery(GET_WORDS)
-  console.log('Dante: Words -> data', data)
+  const words = get(data, 'words', [])
+  console.log('Dante: Words -> words', words)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -102,26 +103,28 @@ export default function Words() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  <TableCell key={`name${index}`}>{get(row, 'name')}</TableCell>
-                  <TableCell key={`category-${index}`}>{get(row, 'category.name')}</TableCell>
-                  <TableCell key={`options${index}`}>
-                    <div>
-                      <NextLink href={`/words/edit/${row._id}`}>
-                        <IconButton>
-                          <EditIcon />
+            {words
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((word, index) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    <TableCell key={`name${index}`}>{get(word, 'name')}</TableCell>
+                    <TableCell key={`category-${index}`}>{get(word, 'category.name')}</TableCell>
+                    <TableCell key={`options${index}`}>
+                      <div>
+                        <NextLink href={`/words/edit/${word._id}`}>
+                          <IconButton>
+                            <EditIcon />
+                          </IconButton>
+                        </NextLink>
+                        <IconButton onClick={handleDeleteWord(word._id)}>
+                          <DelteIcon />
                         </IconButton>
-                      </NextLink>
-                      <IconButton onClick={handleDeleteWord(row._id)}>
-                        <DelteIcon />
-                      </IconButton>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
           </TableBody>
         </Table>
       </TableContainer>

@@ -20,11 +20,12 @@ const NewWord = () => {
   const categories = get(data, 'categories', [])
 
   const handleSubmit = async values => {
+    console.log('Dante: NewWord -> values', values)
     await createWord({
       variables: {
         data: {
           name: values.name,
-          categoryId: values.category._id,
+          categoryId: values.categoryId,
         },
       },
     })
@@ -39,25 +40,33 @@ const NewWord = () => {
       <Formik
         initialValues={{
           name: '',
-          category: null,
+          categoryId: null,
         }}
         onSubmit={handleSubmit}
-        // validationSchema={Yup.object().shape({
-        //   email: Yup.string()
-        //     .email()
-        //     .required('Required'),
-        // })}
+        validationSchema={Yup.object().shape({
+          name: Yup.string()
+            .min(1, 'Text should have almost 1 character')
+            .max(20, 'Name length should be less than 20')
+            .required('Name is required'),
+          categoryId: Yup.string('Category is required')
+            .length(24, 'Invalid Category')
+            .required('Category is required'),
+        })}
       >
         {props => {
-          const { values, handleChange, handleSubmit, setFieldValue } = props
+          const { values, handleChange, handleSubmit, setFieldValue, errors, touched } = props
+          console.log('Dante: NewWord -> values', values)
 
-          const handleChangeCategory = (_, value) => setFieldValue('category', value)
+          const handleChangeCategory = (_, value) =>
+            setFieldValue('categoryId', value ? value._id : null)
 
           return (
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
                 value={values.name}
+                helperText={errors.name}
+                error={Boolean(errors.name)}
                 onChange={handleChange}
                 name="name"
                 label="Name"
@@ -76,6 +85,8 @@ const NewWord = () => {
                     {...params}
                     label="Category"
                     fullWidth
+                    helperText={errors.categoryId}
+                    error={Boolean(errors.categoryId)}
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
