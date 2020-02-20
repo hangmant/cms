@@ -15,8 +15,9 @@ import EditIcon from '@material-ui/icons/Edit'
 import NextLink from 'next/link'
 import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { GET_WORDS } from '../../apollo/queries'
+import { DELETE_WORD_MUTATION } from '../../apollo/mutations'
 
 const columns = [
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
@@ -70,7 +71,10 @@ export default function Words() {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
 
-  const { data } = useQuery(GET_WORDS)
+  const { data, refetch } = useQuery(GET_WORDS)
+  const [deleteWord] = useMutation(DELETE_WORD_MUTATION, {
+    refetchQueries: ['words'],
+  })
   const words = get(data, 'words', [])
   console.log('Dante: Words -> words', words)
 
@@ -83,7 +87,18 @@ export default function Words() {
     setPage(0)
   }
 
-  const handleDeleteWord = id => () => {}
+  const handleDeleteWord = _id => async () => {
+    try {
+      await deleteWord({
+        variables: {
+          _id,
+        },
+      })
+    } catch (error) {
+      console.error(error)
+    }
+    await refetch()
+  }
 
   return (
     <Paper className={classes.root}>
