@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
-export const GET_WORDS = gql`
-  query words {
-    words {
+export const CREATE_WORD_MUTATION = gql`
+  mutation createWord($data: WordCreateInput!) {
+    createWord(data: $data) {
       _id
       name
       category {
