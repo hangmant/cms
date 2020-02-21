@@ -12,7 +12,7 @@ import { get } from 'lodash'
 import { IconButton } from '@material-ui/core'
 import DelteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import NextLink from 'next/link'
+import Link from 'next/link'
 import AddIcon from '@material-ui/icons/Add'
 import Fab from '@material-ui/core/Fab'
 import { useQuery, useMutation } from '@apollo/react-hooks'
@@ -97,7 +97,7 @@ export default function Words() {
     } catch (error) {
       console.error(error)
     }
-    await refetch()
+    // await refetch()
   }
 
   return (
@@ -127,11 +127,11 @@ export default function Words() {
                     <TableCell key={`category-${index}`}>{get(word, 'category.name')}</TableCell>
                     <TableCell key={`options${index}`}>
                       <div>
-                        <NextLink href={`/words/edit/${word._id}`}>
+                        <Link href={`/words/edit/${word._id}`}>
                           <IconButton>
                             <EditIcon />
                           </IconButton>
-                        </NextLink>
+                        </Link>
                         <IconButton onClick={handleDeleteWord(word._id)}>
                           <DelteIcon />
                         </IconButton>
@@ -154,9 +154,9 @@ export default function Words() {
       />
 
       <Fab aria-label={'fab.label'} className={classes.fab} color={'primary'}>
-        <NextLink href={`/words/new`}>
+        <Link href={`/words/new`}>
           <AddIcon />
-        </NextLink>
+        </Link>
       </Fab>
     </Paper>
   )

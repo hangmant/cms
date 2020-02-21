@@ -8,14 +8,24 @@ import { useMutation, useQuery } from '@apollo/react-hooks'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { CREATE_WORD_MUTATION } from '../../apollo/mutations'
-import { GET_CATEGORIES } from '../../apollo/queries'
+import { GET_CATEGORIES, GET_WORDS } from '../../apollo/queries'
 import { get } from 'lodash'
+import { useRouter } from 'next/router'
+import ButtonLoader from '../../src/ButtonLoader'
 
 const NewWord = () => {
   const classes = useStyles()
 
+  const router = useRouter()
   const { data, loading } = useQuery(GET_CATEGORIES)
-  const [createWord] = useMutation(CREATE_WORD_MUTATION)
+  const [createWord, { loading: loadingCreateNew }] = useMutation(CREATE_WORD_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_WORDS,
+      },
+    ],
+    awaitRefetchQueries: true,
+  })
 
   const categories = get(data, 'categories', [])
 
@@ -29,6 +39,7 @@ const NewWord = () => {
         },
       },
     })
+    router.replace('/words')
   }
 
   return (
@@ -101,15 +112,16 @@ const NewWord = () => {
                 )}
               />
 
-              <Button
+              <ButtonLoader
                 type="submit"
                 variant="contained"
                 color="primary"
+                loading={loadingCreateNew}
                 className={classes.button}
                 startIcon={<CreateIcon />}
               >
                 Create
-              </Button>
+              </ButtonLoader>
             </form>
           )
         }}
