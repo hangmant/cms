@@ -1,6 +1,8 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import { IconButton } from '@material-ui/core'
+import Fab from '@material-ui/core/Fab'
 import Paper from '@material-ui/core/Paper'
+import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -8,16 +10,15 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
-import { get } from 'lodash'
-import { IconButton } from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add'
 import DelteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import { get } from 'lodash'
 import Link from 'next/link'
-import AddIcon from '@material-ui/icons/Add'
-import Fab from '@material-ui/core/Fab'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import { GET_WORDS } from '../../apollo/queries'
+import React from 'react'
 import { DELETE_WORD_MUTATION } from '../../apollo/mutations'
+import { GET_WORDS } from '../../apollo/queries'
+import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 
 const columns = [
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
@@ -70,8 +71,9 @@ export default function Words() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
+  const { startLoading, finishLoading } = useGlobalLoader()
 
-  const { data, refetch } = useQuery(GET_WORDS)
+  const { data } = useQuery(GET_WORDS)
   const [deleteWord] = useMutation(DELETE_WORD_MUTATION, {
     refetchQueries: ['words'],
   })
@@ -88,6 +90,7 @@ export default function Words() {
 
   const handleDeleteWord = _id => async () => {
     try {
+      startLoading()
       await deleteWord({
         variables: {
           _id,
@@ -95,8 +98,9 @@ export default function Words() {
       })
     } catch (error) {
       console.error(error)
+    } finally {
+      finishLoading()
     }
-    // await refetch()
   }
 
   return (
@@ -151,7 +155,6 @@ export default function Words() {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-
       <Fab aria-label={'fab.label'} className={classes.fab} color={'primary'}>
         <Link href={`/words/new`}>
           <AddIcon />

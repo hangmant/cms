@@ -1,17 +1,16 @@
-import React from 'react'
-import CreateIcon from '@material-ui/icons/Add'
-import { makeStyles, Button } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { useMutation, useQuery } from '@apollo/react-hooks'
+import { Button, makeStyles } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import TextField from '@material-ui/core/TextField'
+import CreateIcon from '@material-ui/icons/Add'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Formik } from 'formik'
+import { get } from 'lodash'
+import { useRouter } from 'next/router'
+import React from 'react'
 import * as Yup from 'yup'
 import { CREATE_WORD_MUTATION } from '../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORDS } from '../../apollo/queries'
-import { get } from 'lodash'
-import { useRouter } from 'next/router'
-import ButtonLoader from '../../src/ButtonLoader'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 
 const NewWord = () => {
@@ -114,16 +113,16 @@ const NewWord = () => {
                 )}
               />
 
-              <ButtonLoader
+              <Button
                 type="submit"
                 variant="contained"
                 color="primary"
-                loading={loadingCreateNew}
+                disabled={loadingCreateNew}
                 className={classes.button}
                 startIcon={<CreateIcon />}
               >
                 Create
-              </ButtonLoader>
+              </Button>
             </form>
           )
         }}
