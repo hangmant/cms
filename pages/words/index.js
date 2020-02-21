@@ -76,7 +76,6 @@ export default function Words() {
     refetchQueries: ['words'],
   })
   const words = get(data, 'words', [])
-  console.log('Dante: Words -> words', words)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

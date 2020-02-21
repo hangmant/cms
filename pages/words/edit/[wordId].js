@@ -1,24 +1,34 @@
-import React from 'react'
-import CreateIcon from '@material-ui/icons/Add'
-import { makeStyles, Button } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { useMutation, useQuery } from '@apollo/react-hooks'
+import { makeStyles } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import TextField from '@material-ui/core/TextField'
+import EditIcon from '@material-ui/icons/Edit'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
-import { CREATE_WORD_MUTATION } from '../../apollo/mutations'
-import { GET_CATEGORIES, GET_WORDS } from '../../apollo/queries'
 import { get } from 'lodash'
 import { useRouter } from 'next/router'
-import ButtonLoader from '../../src/ButtonLoader'
+import React from 'react'
+import * as Yup from 'yup'
+import { UPDATE_WORD_MUTATION } from '../../../apollo/mutations'
+import { GET_CATEGORIES, GET_WORD, GET_WORDS } from '../../../apollo/queries'
+import ButtonLoader from '../../../src/ButtonLoader'
 
 const NewWord = () => {
   const classes = useStyles()
 
   const router = useRouter()
-  const { data, loading } = useQuery(GET_CATEGORIES)
-  const [createWord, { loading: loadingCreateNew }] = useMutation(CREATE_WORD_MUTATION, {
+
+  const { wordId } = router.query
+
+  const { data, loading } = useQuery(GET_WORD, {
+    variables: {
+      _id: wordId,
+    },
+  })
+
+  const { data: categoriesData, loading: loadingCategories } = useQuery(GET_CATEGORIES)
+
+  const [updateWord, { loading: loadingUpdateWord }] = useMutation(UPDATE_WORD_MUTATION, {
     refetchQueries: [
       {
         query: GET_WORDS,
@@ -27,20 +37,22 @@ const NewWord = () => {
     awaitRefetchQueries: true,
   })
 
-  const categories = get(data, 'categories', [])
+  const categories = get(categoriesData, 'categories', [])
+  const word = get(data, 'word')
 
   const handleSubmit = async values => {
-    await createWord({
+    await updateWord({
       variables: {
+        _id: wordId,
         data: {
           name: values.name,
-          categoryId: values.categoryId,
         },
       },
     })
     router.replace('/words')
   }
 
+  if (loading) return <p>Loading...</p>
   return (
     <div
       style={{
@@ -49,8 +61,8 @@ const NewWord = () => {
     >
       <Formik
         initialValues={{
-          name: '',
-          categoryId: null,
+          name: word.name,
+          category: word.category,
         }}
         onSubmit={handleSubmit}
         validationSchema={Yup.object().shape({
@@ -58,16 +70,12 @@ const NewWord = () => {
             .min(1, 'Text should have almost 1 character')
             .max(20, 'Name length should be less than 20')
             .required('Name is required'),
-          categoryId: Yup.string('Category is required')
-            .length(24, 'Invalid Category')
-            .required('Category is required'),
         })}
       >
         {props => {
-          const { values, handleChange, handleSubmit, setFieldValue, errors, touched } = props
+          const { values, handleChange, handleSubmit, setFieldValue, errors } = props
 
-          const handleChangeCategory = (_, value) =>
-            setFieldValue('categoryId', value ? value._id : null)
+          const handleChangeCategory = (_, value) => setFieldValue('category', value ? value : null)
 
           return (
             <form onSubmit={handleSubmit}>
@@ -85,17 +93,19 @@ const NewWord = () => {
                 style={{ width: '100%', margin: '20px 0' }}
                 id="category"
                 onChange={handleChangeCategory}
-                getOptionSelected={(option, value) => option.name === value.name}
+                getOptionSelected={(option, value) => option._id === value._id}
                 getOptionLabel={option => option.name}
+                disabled // Don't change category on update
+                value={values.category}
                 options={categories}
-                loading={loading}
+                loading={loadingCategories}
                 renderInput={params => (
                   <TextField
                     {...params}
                     label="Category"
                     fullWidth
-                    helperText={errors.categoryId}
-                    error={Boolean(errors.categoryId)}
+                    helperText={errors.category}
+                    error={Boolean(errors.category)}
                     variant="outlined"
                     InputProps={{
                       ...params.InputProps,
@@ -114,11 +124,11 @@ const NewWord = () => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                loading={loadingCreateNew}
+                loading={loadingUpdateWord}
                 className={classes.button}
-                startIcon={<CreateIcon />}
+                startIcon={<EditIcon />}
               >
-                Create
+                UPDATE
               </ButtonLoader>
             </form>
           )
