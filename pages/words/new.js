@@ -12,12 +12,14 @@ import { GET_CATEGORIES, GET_WORDS } from '../../apollo/queries'
 import { get } from 'lodash'
 import { useRouter } from 'next/router'
 import ButtonLoader from '../../src/ButtonLoader'
+import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 
 const NewWord = () => {
   const classes = useStyles()
 
   const router = useRouter()
   const { data, loading } = useQuery(GET_CATEGORIES)
+  const { startLoading, finishLoading } = useGlobalLoader()
   const [createWord, { loading: loadingCreateNew }] = useMutation(CREATE_WORD_MUTATION, {
     refetchQueries: [
       {
@@ -30,6 +32,7 @@ const NewWord = () => {
   const categories = get(data, 'categories', [])
 
   const handleSubmit = async values => {
+    startLoading()
     await createWord({
       variables: {
         data: {
@@ -38,6 +41,7 @@ const NewWord = () => {
         },
       },
     })
+    finishLoading()
     router.replace('/words')
   }
 
