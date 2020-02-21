@@ -140,7 +140,7 @@ export default function PersistentDrawerLeft({ children }) {
               <NextLink key={index} href={menuItem.to} passHref>
                 <ListItem component="a" button>
                   <ListItemIcon>
-                    <InboxIcon />
+                    <menuItem.icon />
                   </ListItemIcon>
                   <ListItemText primary={menuItem.title} />
                 </ListItem>
