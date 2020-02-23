@@ -21,7 +21,7 @@ import { GET_WORDS, GET_CATEGORIES } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 
 const columns = [
-  { id: 'color', key: 'color', label: 'Color', minWidth: 50 },
+  { id: 'color', key: 'color', label: 'Color', minWidth: 50, style: { width: 72 } },
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
   { id: 'options', key: 'name', label: 'Options', minWidth: 100 },
 ]
@@ -29,6 +29,11 @@ const columns = [
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
+  },
+  color: {
+    width: 40,
+    borderRadius: '50%',
+    height: 40,
   },
   fab: {
     position: 'absolute',
@@ -86,7 +91,10 @@ export default function Words() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  style={{
+                    ...(column.style ? column.style : {}),
+                    minWidth: column.minWidth,
+                  }}
                 >
                   {column.label}
                 </TableCell>
@@ -99,7 +107,12 @@ export default function Words() {
               .map((category, index) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    <TableCell key={`name${index}`}>{get(category, 'name')}</TableCell>
+                    <TableCell key={`name${index}`}>
+                      <div
+                        className={classes.color}
+                        style={{ backgroundColor: get(category, 'color') }}
+                      ></div>
+                    </TableCell>
                     <TableCell key={`name${index}`}>{get(category, 'name')}</TableCell>
                     <TableCell key={`options${index}`}>
                       <div>
