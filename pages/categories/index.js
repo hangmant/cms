@@ -17,12 +17,12 @@ import { get } from 'lodash'
 import Link from 'next/link'
 import React from 'react'
 import { DELETE_WORD_MUTATION } from '../../apollo/mutations'
-import { GET_WORDS } from '../../apollo/queries'
+import { GET_WORDS, GET_CATEGORIES } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 
 const columns = [
+  { id: 'color', key: 'color', label: 'Color', minWidth: 50 },
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
-  { id: 'category', key: 'category.name', label: 'Category', minWidth: 100 },
   { id: 'options', key: 'name', label: 'Options', minWidth: 100 },
 ]
 
@@ -46,11 +46,11 @@ export default function Words() {
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
   const { startLoading, finishLoading } = useGlobalLoader()
 
-  const { data } = useQuery(GET_WORDS)
+  const { data } = useQuery(GET_CATEGORIES)
   const [deleteWord] = useMutation(DELETE_WORD_MUTATION, {
     refetchQueries: ['words'],
   })
-  const words = get(data, 'words', [])
+  const categories = get(data, 'categories', [])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -94,24 +94,16 @@ export default function Words() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {words
+            {categories
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((word, index) => {
+              .map((category, index) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    <TableCell key={`name${index}`}>{get(word, 'name')}</TableCell>
-                    <TableCell key={`category-${index}`}>
-                      <Chip
-                        color="primary"
-                        label={get(word, 'category.name')}
-                        style={{
-                          backgroundColor: word.category.color,
-                        }}
-                      />
-                    </TableCell>
+                    <TableCell key={`name${index}`}>{get(category, 'name')}</TableCell>
+                    <TableCell key={`name${index}`}>{get(category, 'name')}</TableCell>
                     <TableCell key={`options${index}`}>
                       <div>
-                        <Link href={`/words/edit/${word._id}`}>
+                        <Link href={`/categories/edit/${category._id}`}>
                           <IconButton>
                             <EditIcon color="primary" />
                           </IconButton>
@@ -120,7 +112,7 @@ export default function Words() {
                           style={{
                             color: '#f44336',
                           }}
-                          onClick={handleDeleteWord(word._id)}
+                          onClick={handleDeleteWord(category._id)}
                         >
                           <DelteIcon />
                         </IconButton>
@@ -135,14 +127,14 @@ export default function Words() {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={words.length}
+        count={categories.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
       <Fab aria-label={'fab.label'} className={classes.fab} color={'primary'}>
-        <Link href={`/words/new`}>
+        <Link href={`/categories/new`}>
           <AddIcon />
         </Link>
       </Fab>
