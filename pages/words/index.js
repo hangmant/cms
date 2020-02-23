@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { IconButton } from '@material-ui/core'
+import { IconButton, Chip } from '@material-ui/core'
 import Fab from '@material-ui/core/Fab'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -127,7 +127,15 @@ export default function Words() {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     <TableCell key={`name${index}`}>{get(word, 'name')}</TableCell>
-                    <TableCell key={`category-${index}`}>{get(word, 'category.name')}</TableCell>
+                    <TableCell key={`category-${index}`}>
+                      <Chip
+                        color="primary"
+                        label={get(word, 'category.name')}
+                        style={{
+                          backgroundColor: word.category.color,
+                        }}
+                      />
+                    </TableCell>
                     <TableCell key={`options${index}`}>
                       <div>
                         <Link href={`/words/edit/${word._id}`}>
@@ -135,7 +143,7 @@ export default function Words() {
                             <EditIcon />
                           </IconButton>
                         </Link>
-                        <IconButton onClick={handleDeleteWord(word._id)}>
+                        <IconButton color="primary" onClick={handleDeleteWord(word._id)}>
                           <DelteIcon />
                         </IconButton>
                       </div>

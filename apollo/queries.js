@@ -8,6 +8,7 @@ export const GET_WORDS = gql`
       category {
         _id
         name
+        color
         description
       }
     }
@@ -22,6 +23,7 @@ export const GET_WORD = gql`
       category {
         _id
         name
+        color
         description
       }
     }
@@ -33,6 +35,7 @@ export const GET_CATEGORIES = gql`
     categories {
       _id
       name
+      color
       description
     }
   }
