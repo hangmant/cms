@@ -140,10 +140,15 @@ export default function Words() {
                       <div>
                         <Link href={`/words/edit/${word._id}`}>
                           <IconButton>
-                            <EditIcon />
+                            <EditIcon color="primary" />
                           </IconButton>
                         </Link>
-                        <IconButton color="primary" onClick={handleDeleteWord(word._id)}>
+                        <IconButton
+                          style={{
+                            color: '#f44336',
+                          }}
+                          onClick={handleDeleteWord(word._id)}
+                        >
                           <DelteIcon />
                         </IconButton>
                       </div>

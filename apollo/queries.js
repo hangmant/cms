@@ -10,7 +10,9 @@ export const GET_WORDS = gql`
         name
         color
         description
+        __typename
       }
+      __typename
     }
   }
 `
@@ -25,7 +27,9 @@ export const GET_WORD = gql`
         name
         color
         description
+        __typename
       }
+      __typename
     }
   }
 `
@@ -37,6 +41,7 @@ export const GET_CATEGORIES = gql`
       name
       color
       description
+      __typename
     }
   }
 `
