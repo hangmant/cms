@@ -50,7 +50,7 @@ const NewWord = () => {
       },
     })
     finishLoading()
-    router.replace('/words')
+    router.replace('/categories')
   }
 
   if (loading) return <p>Loading...</p>
