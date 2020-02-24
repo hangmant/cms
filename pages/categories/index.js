@@ -22,7 +22,18 @@ import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 
 const columns = [
   { id: 'color', key: 'color', label: 'Color', minWidth: 50, style: { width: 72 } },
-  { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
+  {
+    id: 'name',
+    key: 'name',
+    label: 'Name',
+    minWidth: 170,
+  },
+  {
+    id: 'description',
+    key: 'description',
+    label: 'Description',
+    minWidth: 170,
+  },
   { id: 'options', key: 'name', label: 'Options', minWidth: 100 },
 ]
 
@@ -116,7 +127,12 @@ export default function Words() {
                         style={{ backgroundColor: get(category, 'color') }}
                       ></div>
                     </TableCell>
-                    <TableCell key={`name${index}`}>{get(category, 'name')}</TableCell>
+                    <TableCell style={{ fontWeight: 'bold' }} key={`name${index}`}>
+                      {get(category, 'name')}
+                    </TableCell>
+                    <TableCell key={`description${index}`}>
+                      {get(category, 'description')}
+                    </TableCell>
                     <TableCell key={`options${index}`}>
                       <div>
                         <Link href={`/categories/edit/${category._id}`}>

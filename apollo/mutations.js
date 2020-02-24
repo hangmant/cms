@@ -8,8 +8,11 @@ export const CREATE_WORD_MUTATION = gql`
       category {
         _id
         name
+        color
         description
+        __typename
       }
+      __typename
     }
   }
 `
@@ -22,8 +25,11 @@ export const UPDATE_WORD_MUTATION = gql`
       category {
         _id
         name
+        color
         description
+        __typename
       }
+      __typename
     }
   }
 `
@@ -36,8 +42,11 @@ export const DELETE_WORD_MUTATION = gql`
       category {
         _id
         name
+        color
         description
+        __typename
       }
+      __typename
     }
   }
 `
@@ -49,6 +58,7 @@ export const CREATE_CATEGORY_MUTATION = gql`
       name
       color
       description
+      __typename
     }
   }
 `
@@ -60,6 +70,7 @@ export const UPDATE_CATEGORY_MUTATION = gql`
       name
       color
       description
+      __typename
     }
   }
 `
@@ -71,6 +82,7 @@ export const DELETE_CATEGORY_MUTATION = gql`
       name
       color
       description
+      __typename
     }
   }
 `

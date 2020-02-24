@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/react-hooks'
 import { makeStyles } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
-import EditIcon from '@material-ui/icons/Edit'
+import CachedIcon from '@material-ui/icons/Cached'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Formik } from 'formik'
 import { get } from 'lodash'
@@ -12,9 +12,11 @@ import * as Yup from 'yup'
 import { UPDATE_WORD_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORD, GET_WORDS } from '../../../apollo/queries'
 import ButtonLoader from '../../../src/ButtonLoader'
+import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
 
 const NewWord = () => {
   const classes = useStyles()
+  const { startLoading, finishLoading } = useGlobalLoader()
 
   const router = useRouter()
 
@@ -41,6 +43,7 @@ const NewWord = () => {
   const word = get(data, 'word')
 
   const handleSubmit = async values => {
+    startLoading()
     await updateWord({
       variables: {
         _id: wordId,
@@ -49,6 +52,7 @@ const NewWord = () => {
         },
       },
     })
+    finishLoading()
     router.replace('/words')
   }
 
@@ -126,7 +130,7 @@ const NewWord = () => {
                 color="primary"
                 loading={loadingUpdateWord}
                 className={classes.button}
-                startIcon={<EditIcon />}
+                startIcon={<CachedIcon />}
               >
                 UPDATE
               </ButtonLoader>
