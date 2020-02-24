@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     right: theme.spacing(2),
   },
   container: {
-    maxHeight: 700,
+    maxHeight: 800,
   },
 }))
 

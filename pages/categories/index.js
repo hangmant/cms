@@ -16,7 +16,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import { get } from 'lodash'
 import Link from 'next/link'
 import React from 'react'
-import { DELETE_WORD_MUTATION } from '../../apollo/mutations'
+import { DELETE_WORD_MUTATION, DELETE_CATEGORY_MUTATION } from '../../apollo/mutations'
 import { GET_WORDS, GET_CATEGORIES } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     right: theme.spacing(2),
   },
   container: {
-    maxHeight: 700,
+    maxHeight: 800,
   },
 }))
 
@@ -51,13 +51,16 @@ export default function Words() {
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
   const { startLoading, finishLoading } = useGlobalLoader()
 
-  const { data } = useQuery(GET_CATEGORIES)
-  const [deleteWord] = useMutation(DELETE_WORD_MUTATION, {
-    refetchQueries: ['words'],
+  const { data } = useQuery(GET_CATEGORIES, {
+    pollInterval: 3000,
+  })
+  const [deleteCategory] = useMutation(DELETE_CATEGORY_MUTATION, {
+    refetchQueries: ['categories'],
+    awaitRefetchQueries: true,
   })
   const categories = get(data, 'categories', [])
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage)
   }
 
@@ -69,7 +72,7 @@ export default function Words() {
   const handleDeleteWord = _id => async () => {
     try {
       startLoading()
-      await deleteWord({
+      await deleteCategory({
         variables: {
           _id,
         },
@@ -107,7 +110,7 @@ export default function Words() {
               .map((category, index) => {
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    <TableCell key={`name${index}`}>
+                    <TableCell key={`color${index}`}>
                       <div
                         className={classes.color}
                         style={{ backgroundColor: get(category, 'color') }}

@@ -20,7 +20,6 @@ const GlobalLoader = () => {
   const classes = useStyles()
 
   const { isLoading } = useGlobalLoader()
-  console.log('Dante: GlobalLoader -> isLoading', isLoading)
   return (
     <div className={clsx(classes.container, !isLoading ? classes.hide : null)}>
       {isLoading && <LinearProgress color="secondary" />}

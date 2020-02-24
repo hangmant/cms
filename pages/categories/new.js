@@ -1,18 +1,15 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import { Button, makeStyles } from '@material-ui/core'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import CreateIcon from '@material-ui/icons/Add'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import { Formik } from 'formik'
-import { get } from 'lodash'
 import { useRouter } from 'next/router'
 import React from 'react'
-import * as Yup from 'yup'
-import { CREATE_WORD_MUTATION, CREATE_CATEGORY_MUTATION } from '../../apollo/mutations'
-import { GET_CATEGORIES, GET_WORDS } from '../../apollo/queries'
-import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 import { HuePicker } from 'react-color'
+import * as Yup from 'yup'
+import { CREATE_CATEGORY_MUTATION } from '../../apollo/mutations'
+import { GET_CATEGORIES } from '../../apollo/queries'
+import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 import Phone from '../../src/Phone'
 
 const NewWord = () => {
@@ -20,28 +17,34 @@ const NewWord = () => {
 
   const router = useRouter()
   const { startLoading, finishLoading } = useGlobalLoader()
-  const [createWord, { loading: loadingCreateNew }] = useMutation(CREATE_CATEGORY_MUTATION, {
+  const [createCategory, { loading: loadingCreate }] = useMutation(CREATE_CATEGORY_MUTATION, {
     refetchQueries: [
       {
-        query: GET_WORDS,
+        query: GET_CATEGORIES,
       },
     ],
     awaitRefetchQueries: true,
   })
 
   const handleSubmit = async values => {
-    console.log('Dante: values', values)
-    // startLoading()
-    // await createWord({
-    //   variables: {
-    //     data: {
-    //       name: values.name,
-    //       categoryId: values.categoryId,
-    //     },
-    //   },
-    // })
-    // finishLoading()
-    // router.replace('/words')
+    try {
+      startLoading()
+      await createCategory({
+        variables: {
+          data: {
+            name: values.name,
+            color: values.color,
+            description: values.description,
+          },
+        },
+      })
+
+      router.replace('/categories')
+    } catch (error) {
+      console.error(error)
+    } finally {
+      finishLoading()
+    }
   }
 
   return (
@@ -59,7 +62,7 @@ const NewWord = () => {
           .required('Name is required'),
         description: Yup.string()
           .min(1, 'Text should have almost 1 character')
-          .max(20, 'Name length should be less than 20'),
+          .max(800, 'Description length should be less than 20'),
       })}
     >
       {props => {
@@ -97,16 +100,21 @@ const NewWord = () => {
                   label="Description"
                   variant="outlined"
                 />
-                <HuePicker
-                  className={classes.colorPicker}
-                  color={values.color}
-                  onChange={handleChangeColor}
-                />
+                <div className={classes.pickerField}>
+                  <p className={classes.pickerFieldLabel}>Color</p>
+                  <div style={{ paddingLeft: 10 }}>
+                    <HuePicker
+                      className={classes.colorPicker}
+                      color={values.color}
+                      onChange={handleChangeColor}
+                    />
+                  </div>
+                </div>
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
-                  disabled={loadingCreateNew}
+                  disabled={loadingCreate}
                   className={classes.button}
                   startIcon={<CreateIcon />}
                 >
@@ -151,6 +159,19 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     display: 'flex',
+  },
+  pickerField: {
+    display: 'flex',
+    margin: '10px 0',
+    padding: '10px 6px',
+    border: '1px  solid #c4c4c4',
+    borderRadius: 4,
+    flexDirection: 'column',
+  },
+  pickerFieldLabel: {
+    color: '#757575',
+    fontSize: 16,
+    margin: '0 0 8px 0',
   },
 }))
 
