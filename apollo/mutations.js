@@ -41,3 +41,36 @@ export const DELETE_WORD_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_CATEGORY_MUTATION = gql`
+  mutation createCategory($data: CategoryCreateInput!) {
+    createCategory(data: $data) {
+      _id
+      name
+      color
+      description
+    }
+  }
+`
+
+export const UPDATE_CATEGORY_MUTATION = gql`
+  mutation updateCategory($_id: ID!, $data: CategoryUpdateInput!) {
+    updateCategory(_id: $_id, data: $data) {
+      _id
+      name
+      color
+      description
+    }
+  }
+`
+
+export const DELETE_CATEGORY_MUTATION = gql`
+  mutation deleteCategory($_id: ID!) {
+    deleteCategory(_id: $_id) {
+      _id
+      name
+      color
+      description
+    }
+  }
+`
