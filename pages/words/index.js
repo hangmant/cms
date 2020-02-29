@@ -46,7 +46,9 @@ export default function Words() {
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
   const { startLoading, finishLoading } = useGlobalLoader()
 
-  const { data } = useQuery(GET_WORDS)
+  const { data } = useQuery(GET_WORDS, {
+    pollInterval: 3000,
+  })
   const [deleteWord] = useMutation(DELETE_WORD_MUTATION, {
     refetchQueries: ['words'],
   })
