@@ -1,6 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import phoneLayout from '../assets/images/iphone.png'
+const phoneLayout = require('../assets/images/iphone.png')
 
 const useStyles = makeStyles({
   image: {

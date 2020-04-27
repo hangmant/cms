@@ -1,28 +1,38 @@
 import React, { useReducer } from 'react'
 
-const GlobalContext = React.createContext()
+type GlobalStateType = {
+  totalRequests: number
+}
 
-const initialState = {
+type GlobalContextType = {
+  globalState: GlobalStateType
+  dispatchGlobalState: React.Dispatch<any>
+}
+
+const GlobalContext = React.createContext<GlobalContextType | undefined>(undefined)
+
+const initialState: GlobalStateType = {
   totalRequests: 0,
 }
 
-const globalContextReducer = (state, action) => {
+type GlobalAction = {
+  type: string
+}
+
+const globalContextReducer = (state: GlobalStateType, action: GlobalAction) => {
   switch (action.type) {
     case 'START_LOADING':
       return {
         ...state,
         totalRequests: state.totalRequests + 1,
       }
-      break
     case 'FINISH_LOADING':
       return {
         ...state,
         totalRequests: state.totalRequests - 1,
       }
-      break
-
     default:
-      break
+      return state
   }
 }
 

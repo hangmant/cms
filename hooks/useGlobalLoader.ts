@@ -2,7 +2,6 @@ import { useContext } from 'react'
 import { GlobalContext } from '../contexts/globalContext'
 
 export const useGlobalLoader = () => {
-  useContext
   const { globalState, dispatchGlobalState } = useContext(GlobalContext)
 
   const startLoading = () => {

@@ -13,7 +13,7 @@ import React from 'react'
 import Layout from '../src/Layout'
 import theme from '../src/theme'
 
-class MyApp extends App {
+class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
