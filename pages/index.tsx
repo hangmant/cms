@@ -25,7 +25,7 @@ export default function Index() {
     <Container maxWidth="sm">
       <Box my={4}>
         <Button variant="contained" color="secondary" component={ButtonLink} href="/words">
-          Get Started
+          Get Started asdf
         </Button>
         <ProTip />
         <Copyright />
