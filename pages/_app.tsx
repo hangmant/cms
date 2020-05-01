@@ -11,6 +11,7 @@ import withApollo from 'next-with-apollo'
 import App from 'next/app'
 import Head from 'next/head'
 import React from 'react'
+import { NextProgress } from '../components/shared/NextProgress'
 import theme from '../components/theme'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
@@ -29,6 +30,13 @@ class MyApp extends App<{ apollo: ApolloClient<any> }> {
       <ApolloProvider client={apollo}>
         <React.Fragment>
           <ThemeProvider theme={theme}>
+            <NextProgress
+              color="#f89402"
+              options={{ trickleSpeed: 50 }}
+              height="3"
+              showAfterMs={200}
+              spinner
+            />
             <CssBaseline />
             <Head>
               <title>Hangman CMS</title>
