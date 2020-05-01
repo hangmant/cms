@@ -11,18 +11,18 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: 'Use Node.js v${{ matrix.node-version }}'
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v2
+      - name: 'Use Node.js v${{ matrix.node-version }}'
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install yarn
-      run: npm i -g yarn
-    
-    - name: Install packages
-      run: yarn
+      - name: Install yarn
+        run: npm i -g yarn
 
-    - name: Build
-      run: yarn build
+      - name: Install packages
+        run: yarn
+
+      - name: Build
+        run: yarn build
     # deploy to now here
