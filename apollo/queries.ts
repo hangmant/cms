@@ -18,7 +18,7 @@ export const GET_WORDS = gql`
 `
 
 export const GET_WORD = gql`
-  query word($_id: ID!) {
+  query word($_id: GraphQLObjectId!) {
     word(_id: $_id) {
       _id
       name
@@ -47,7 +47,7 @@ export const GET_CATEGORIES = gql`
 `
 
 export const GET_CATEGORY = gql`
-  query category($_id: ID!) {
+  query category($_id: GraphQLObjectId!) {
     category(_id: $_id) {
       _id
       name
