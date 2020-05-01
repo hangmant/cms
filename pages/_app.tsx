@@ -11,7 +11,6 @@ import withApollo from 'next-with-apollo'
 import App from 'next/app'
 import Head from 'next/head'
 import React from 'react'
-import Layout from '../src/Layout'
 import theme from '../src/theme'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
@@ -29,15 +28,16 @@ class MyApp extends App<{ apollo: ApolloClient<any> }> {
     return (
       <ApolloProvider client={apollo}>
         <React.Fragment>
-          <Head>
-            <title>Hangman CMS</title>
-            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-          </Head>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <Head>
+              <title>Hangman CMS</title>
+              <meta
+                name="viewport"
+                content="minimum-scale=1, initial-scale=1, width=device-width"
+              />
+            </Head>
+            <Component {...pageProps} />
           </ThemeProvider>
         </React.Fragment>
       </ApolloProvider>

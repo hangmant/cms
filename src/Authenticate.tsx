@@ -1,6 +1,7 @@
 import { window } from 'browser-monads'
 import Router, { useRouter } from 'next/router'
 import React, { createContext, useContext, useEffect, useState } from 'react'
+import Layout from './Layout'
 
 type AuthUserInfo = boolean
 
@@ -33,7 +34,7 @@ export function withAuthentication(Component: React.ElementType) {
 
     return (
       <AuthContext.Provider value={user}>
-        {user ? <Component {...props} user={user} /> : null}
+        <Layout>{user ? <Component {...props} user={user} /> : null}</Layout>
       </AuthContext.Provider>
     )
   }
