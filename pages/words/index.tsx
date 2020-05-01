@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { IconButton, Chip } from '@material-ui/core'
+import { Chip, IconButton } from '@material-ui/core'
 import Fab from '@material-ui/core/Fab'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -19,6 +19,7 @@ import React from 'react'
 import { DELETE_WORD_MUTATION } from '../../apollo/mutations'
 import { GET_WORDS } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
+import { withAuthentication } from '../../src/Authenticate'
 
 const columns = [
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Words() {
+function Words() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
@@ -85,11 +86,7 @@ export default function Words() {
           <TableHead>
             <TableRow>
               {columns.map(column => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
+                <TableCell key={column.id} style={{ minWidth: column.minWidth }}>
                   {column.label}
                 </TableCell>
               ))}
@@ -151,3 +148,5 @@ export default function Words() {
     </Paper>
   )
 }
+
+export default withAuthentication(Words)

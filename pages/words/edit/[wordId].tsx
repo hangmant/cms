@@ -13,6 +13,7 @@ import { UPDATE_WORD_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORD, GET_WORDS } from '../../../apollo/queries'
 import ButtonLoader from '../../../src/ButtonLoader'
 import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
+import { withAuthentication } from '../../../src/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()
@@ -149,4 +150,4 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default NewWord
+export default withAuthentication(NewWord)

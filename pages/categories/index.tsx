@@ -19,8 +19,17 @@ import React from 'react'
 import { DELETE_WORD_MUTATION, DELETE_CATEGORY_MUTATION } from '../../apollo/mutations'
 import { GET_WORDS, GET_CATEGORIES } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
+import { withAuthentication } from '../../src/Authenticate'
 
-const columns = [
+type ColumnType = {
+  id?: string
+  key?: string
+  label?: string
+  minWidth?: number
+  style?: any
+}
+
+const columns: ColumnType[] = [
   { id: 'color', key: 'color', label: 'Color', minWidth: 50, style: { width: 72 } },
   {
     id: 'name',
@@ -56,7 +65,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Words() {
+function Words() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
@@ -104,7 +113,6 @@ export default function Words() {
               {columns.map(column => (
                 <TableCell
                   key={column.id}
-                  align={column.align}
                   style={{
                     ...(column.style ? column.style : {}),
                     minWidth: column.minWidth,
@@ -173,3 +181,5 @@ export default function Words() {
     </Paper>
   )
 }
+
+export default withAuthentication(Words)

@@ -12,6 +12,7 @@ import * as Yup from 'yup'
 import { CREATE_WORD_MUTATION } from '../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORDS } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
+import { withAuthentication } from '../../src/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()
@@ -137,4 +138,4 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default NewWord
+export default withAuthentication(NewWord)

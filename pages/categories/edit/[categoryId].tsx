@@ -12,6 +12,7 @@ import { UPDATE_CATEGORY_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_CATEGORY } from '../../../apollo/queries'
 import Phone from '../../../src/Phone'
 import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
+import { withAuthentication } from '../../../src/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()
@@ -182,4 +183,4 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default NewWord
+export default withAuthentication(NewWord)
