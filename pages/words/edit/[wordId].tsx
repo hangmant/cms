@@ -11,9 +11,9 @@ import React from 'react'
 import * as Yup from 'yup'
 import { UPDATE_WORD_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORD, GET_WORDS } from '../../../apollo/queries'
-import ButtonLoader from '../../../src/ButtonLoader'
+import ButtonLoader from '../../../components/ButtonLoader'
 import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
-import { withAuthentication } from '../../../src/Authenticate'
+import { withAuthentication } from '../../../components/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()

@@ -10,8 +10,8 @@ import * as Yup from 'yup'
 import { CREATE_CATEGORY_MUTATION } from '../../apollo/mutations'
 import { GET_CATEGORIES } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
-import Phone from '../../src/Phone'
-import { withAuthentication } from '../../src/Authenticate'
+import Phone from '../../components/Phone'
+import { withAuthentication } from '../../components/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()

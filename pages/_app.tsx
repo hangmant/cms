@@ -11,7 +11,7 @@ import withApollo from 'next-with-apollo'
 import App from 'next/app'
 import Head from 'next/head'
 import React from 'react'
-import theme from '../src/theme'
+import theme from '../components/theme'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {

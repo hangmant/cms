@@ -10,9 +10,9 @@ import { HuePicker } from 'react-color'
 import * as Yup from 'yup'
 import { UPDATE_CATEGORY_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_CATEGORY } from '../../../apollo/queries'
-import Phone from '../../../src/Phone'
+import Phone from '../../../components/Phone'
 import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
-import { withAuthentication } from '../../../src/Authenticate'
+import { withAuthentication } from '../../../components/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()

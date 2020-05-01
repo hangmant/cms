@@ -19,7 +19,7 @@ import React from 'react'
 import { DELETE_WORD_MUTATION, DELETE_CATEGORY_MUTATION } from '../../apollo/mutations'
 import { GET_WORDS, GET_CATEGORIES } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
-import { withAuthentication } from '../../src/Authenticate'
+import { withAuthentication } from '../../components/Authenticate'
 
 type ColumnType = {
   id?: string

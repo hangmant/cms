@@ -2,8 +2,8 @@ import { Button, Card, Divider, TextField } from '@material-ui/core'
 import Router from 'next/router'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Separator from './components/shared/Separator'
-import { ResLoginLocal } from './interfaces/res-login-local.interface'
+import Separator from './shared/Separator'
+import { ResLoginLocal } from '../interfaces/res-login-local.interface'
 
 export const Login = () => {
   const [username, setUsername] = useState<string>('calderon@gmail.com')
