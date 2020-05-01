@@ -13,7 +13,7 @@ describe('Index', () => {
     app = shallow(<App />)
   })
 
-  describe('Get Stated Button', () => {
+  describe('"Get Stated" Button', () => {
     let getStartedButton
 
     beforeAll(() => {
