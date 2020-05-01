@@ -1,7 +1,7 @@
 import { window } from 'browser-monads'
 import Router, { useRouter } from 'next/router'
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import Layout from './Layout'
+import Layout from '../components/Layout'
 
 type AuthUserInfo = boolean
 

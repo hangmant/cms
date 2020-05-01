@@ -12,7 +12,7 @@ import { UPDATE_CATEGORY_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_CATEGORY } from '../../../apollo/queries'
 import Phone from '../../../components/Phone'
 import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
-import { withAuthentication } from '../../../components/Authenticate'
+import { withAuthentication } from '../../../hoc/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()

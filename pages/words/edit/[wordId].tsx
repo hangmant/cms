@@ -13,7 +13,7 @@ import { UPDATE_WORD_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORD, GET_WORDS } from '../../../apollo/queries'
 import ButtonLoader from '../../../components/ButtonLoader'
 import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
-import { withAuthentication } from '../../../components/Authenticate'
+import { withAuthentication } from '../../../hoc/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()

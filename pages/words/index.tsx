@@ -19,7 +19,7 @@ import React from 'react'
 import { DELETE_WORD_MUTATION } from '../../apollo/mutations'
 import { GET_WORDS } from '../../apollo/queries'
 import { useGlobalLoader } from '../../hooks/useGlobalLoader'
-import { withAuthentication } from '../../components/Authenticate'
+import { withAuthentication } from '../../hoc/Authenticate'
 
 const columns = [
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
