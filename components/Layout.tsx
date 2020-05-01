@@ -14,14 +14,14 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import MenuIcon from '@material-ui/icons/Menu'
+import { window } from 'browser-monads'
 import clsx from 'clsx'
 import NextLink from 'next/link'
+import Router from 'next/router'
 import React, { useState } from 'react'
 import { MENU_ITEMS } from '../constants/menu'
 import { GlobalContextProvider } from '../contexts/globalContext'
 import GlobalLoader from './GlobalLoader'
-import { window } from 'browser-monads'
-import Router from 'next/router'
 
 const drawerWidth = 240
 

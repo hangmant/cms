@@ -1,23 +1,18 @@
 import { useState, useEffect } from 'react'
-import lscache from 'lscache'
+import { window } from 'browser-monads'
 
-export const useLocalStorage = (key: string, defaultValue: any) => {
+export function useLocalStorage(key: string, defaultValue: any) {
   const [state, setState] = useState(() => {
-    let value
     try {
-      const localValue = lscache.get(key)
-      value =
-        localValue !== undefined && localValue !== null ? localValue : JSON.stringify(defaultValue)
-
-      value = JSON.parse(value)
+      const localValue = window.localStorage.getItem(key)
+      return localValue ? JSON.parse(localValue) : defaultValue
     } catch (e) {
-      value = defaultValue
+      return defaultValue
     }
-    return value
   })
 
   useEffect(() => {
-    lscache.set(key, state)
+    window.localStorage.setItem(key, state)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state])
 
