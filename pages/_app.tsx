@@ -6,6 +6,7 @@ import { ApolloClient } from 'apollo-client'
 import { ApolloLink } from 'apollo-link'
 import { onError } from 'apollo-link-error'
 import { HttpLink } from 'apollo-link-http'
+import { window } from 'browser-monads'
 import withApollo from 'next-with-apollo'
 import App from 'next/app'
 import Head from 'next/head'
@@ -66,6 +67,9 @@ export default withApollo(
         }),
         new HttpLink({
           uri: 'http://localhost:8087/graphql',
+          headers: {
+            Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+          },
         }),
       ]),
       cache: new InMemoryCache(),
