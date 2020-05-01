@@ -1,8 +1,9 @@
+import { Button, Card, Divider, TextField } from '@material-ui/core'
+import Router from 'next/router'
 import React, { useState } from 'react'
-import { ResLoginLocal } from './interfaces/res-login-local.interface'
-import { TextField, Box, Card, Button, Divider, Typography } from '@material-ui/core'
 import styled from 'styled-components'
 import Separator from './components/shared/Separator'
+import { ResLoginLocal } from './interfaces/res-login-local.interface'
 
 export const Login = () => {
   const [username, setUsername] = useState<string>('calderon@gmail.com')
@@ -10,7 +11,7 @@ export const Login = () => {
 
   const onClickLogIn = async () => {
     try {
-      const response: ResLoginLocal = await fetch(`http://localhost:8087/api/auth/login/jwt`, {
+      const response = await fetch(`http://localhost:8087/api/auth/login/jwt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -19,14 +20,17 @@ export const Login = () => {
           username,
           password,
         }),
-      }).then(res => res.json())
+      })
 
-      if (response) {
-        localStorage.setItem('token', response.token)
-      } else {
-        throw new Error('Response is empty')
+      const body: ResLoginLocal = await response.json()
+
+      if (!response.ok || !body.token) {
+        throw new Error('You are not authenticated')
       }
-      console.log('Dante: onClickLogIn -> response', response)
+
+      localStorage.setItem('token', body.token)
+
+      await Router.replace('/words')
     } catch (error) {
       console.error('Error on login', error)
     }
