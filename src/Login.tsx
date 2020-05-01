@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { ResLoginLocal } from './interfaces/res-login-local.interface'
+import { TextField, Box, Card } from '@material-ui/core'
+import styled from 'styled-components'
 
 export const Login = () => {
   const [username, setUsername] = useState<string>('calderon@gmail.com')
@@ -31,9 +33,15 @@ export const Login = () => {
 
   return (
     <div>
-      <input value={username} type="string" onChange={e => setUsername(e.target.value)} />
-      <input value={password} type="password" onChange={e => setPassword(e.target.value)} />
-      <button onClick={onClickLogIn}>Login</button>
+      <Card>
+        <TextField value={username} onChange={e => setUsername(e.target.value)} />
+        <TextField value={password} onChange={e => setPassword(e.target.value)} />
+        <button onClick={onClickLogIn}>Login</button>
+      </Card>
     </div>
   )
 }
+
+const Container = styled(Card)`
+  background: red;
+`
