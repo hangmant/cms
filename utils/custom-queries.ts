@@ -1,6 +1,7 @@
-import { queryHelpers, buildQueries } from '@testing-library/react'
+import { buildQueries, Matcher, MatcherOptions, queryHelpers } from '@testing-library/react'
 
-const queryAllByDataCy = (...args) => queryHelpers.queryAllByAttribute('data-cy', ...args)
+const queryAllByDataCy = (container?: HTMLElement, id?: Matcher, options?: MatcherOptions) =>
+  queryHelpers.queryAllByAttribute('data-cy', container, id, options)
 
 const getMultipleError = (c, dataCyValue) =>
   `Found multiple elements with the data-cy attribute of: ${dataCyValue}`
