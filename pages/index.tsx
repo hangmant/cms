@@ -5,7 +5,6 @@ import MuiLink from '@material-ui/core/Link'
 import Typography from '@material-ui/core/Typography'
 import React from 'react'
 import { ButtonLink } from '../components/ButtonLink'
-import ProTip from '../components/ProTip'
 
 function Copyright() {
   return (
@@ -24,10 +23,15 @@ export default function Index() {
   return (
     <Container maxWidth="sm">
       <Box my={4}>
-        <Button variant="contained" color="secondary" component={ButtonLink} href="/words">
+        <Button
+          data-cy="get-started-btn"
+          variant="contained"
+          color="secondary"
+          component={ButtonLink}
+          href="/words"
+        >
           Get Started
         </Button>
-        <ProTip />
         <Copyright />
       </Box>
     </Container>

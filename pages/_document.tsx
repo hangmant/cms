@@ -2,14 +2,14 @@ import { ServerStyleSheets } from '@material-ui/core/styles'
 import Document, { Head, Main, NextScript } from 'next/document'
 import React from 'react'
 import { ServerStyleSheet } from 'styled-components'
-import theme from '../components/theme'
+import { defaultTheme } from '../themes/default.theme'
 
 export default class MyDocument extends Document {
   render() {
     return (
       <html lang="en">
         <Head>
-          <meta name="theme-color" content={theme.palette.primary.main} />
+          <meta name="theme-color" content={defaultTheme.palette.primary.main} />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"

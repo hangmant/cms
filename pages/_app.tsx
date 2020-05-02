@@ -12,7 +12,7 @@ import App from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 import { NextProgress } from '../components/shared/NextProgress'
-import theme from '../components/theme'
+import { defaultTheme } from '../themes/default.theme'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -29,7 +29,7 @@ class MyApp extends App<{ apollo: ApolloClient<any> }> {
     return (
       <ApolloProvider client={apollo}>
         <React.Fragment>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={defaultTheme}>
             <NextProgress
               color="#f89402"
               options={{ trickleSpeed: 50 }}
