@@ -13,6 +13,7 @@ import Head from 'next/head'
 import React from 'react'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
+import { appWithTranslation } from '../i18n'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -83,4 +84,4 @@ export default withApollo(
       cache: new InMemoryCache(),
     })
   }
-)(MyApp)
+)(appWithTranslation(MyApp))
