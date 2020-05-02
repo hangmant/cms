@@ -5,6 +5,7 @@ import Link from 'next/link'
 import React from 'react'
 import Separator from '../../shared/Separator'
 
+// TODO: define properties
 export const Profile = props => {
   const { className, ...rest } = props
 

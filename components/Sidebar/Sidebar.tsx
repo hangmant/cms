@@ -67,6 +67,8 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 0,
   },
   drawerPaper: {
+    paddingLeft: 10,
+    paddingRight: 10,
     width: SIDEBAR_WIDTH,
   },
   drawerHeader: {

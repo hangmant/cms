@@ -5,7 +5,7 @@ import { noop } from '../../../utils/shared.utils'
 
 type SidebarItemProps = {
   to?: string
-  onClick?: Function
+  onClick?: any
   title: string
   IconComponent: React.ElementRef<any>
 }
@@ -23,7 +23,7 @@ const SidebarItem = ({ to, onClick = noop, title, IconComponent }: SidebarItemPr
       </Button>
     </NextLink>
   ) : (
-    <Button onClick={noop} fullWidth className={classes.button}>
+    <Button onClick={onClick} fullWidth className={classes.button}>
       <div className={classes.icon}>
         <IconComponent />
       </div>
