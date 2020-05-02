@@ -12,7 +12,7 @@ import App from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 import { NextProgress } from '../components/shared/NextProgress'
-import { defaultTheme } from '../themes/default.theme'
+import { defaultTheme } from '../themes/default'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {

@@ -12,12 +12,10 @@ import * as Yup from 'yup'
 import { UPDATE_WORD_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORD, GET_WORDS } from '../../../apollo/queries'
 import ButtonLoader from '../../../components/ButtonLoader'
-import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
 import { withAuthentication } from '../../../hoc/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()
-  const { startLoading, finishLoading } = useGlobalLoader()
 
   const router = useRouter()
 
@@ -45,7 +43,6 @@ const NewWord = () => {
   const word = get(data, 'word')
 
   const handleSubmit = async values => {
-    startLoading()
     await updateWord({
       variables: {
         _id: wordId,
@@ -54,7 +51,6 @@ const NewWord = () => {
         },
       },
     })
-    finishLoading()
     router.replace('/words')
   }
 
@@ -81,7 +77,8 @@ const NewWord = () => {
         {props => {
           const { values, handleChange, handleSubmit, setFieldValue, errors } = props
 
-          const handleChangeCategory = (_, value) => setFieldValue('category', value ? value : null)
+          const handleChangeCategory = (_, value) =>
+            setFieldValue('category', value ? value : null)
 
           return (
             <form onSubmit={handleSubmit}>

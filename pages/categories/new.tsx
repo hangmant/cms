@@ -9,7 +9,6 @@ import { HuePicker } from 'react-color'
 import * as Yup from 'yup'
 import { CREATE_CATEGORY_MUTATION } from '../../apollo/mutations'
 import { GET_CATEGORIES } from '../../apollo/queries'
-import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 import Phone from '../../components/Phone'
 import { withAuthentication } from '../../hoc/Authenticate'
 
@@ -17,7 +16,6 @@ const NewWord = () => {
   const classes = useStyles()
 
   const router = useRouter()
-  const { startLoading, finishLoading } = useGlobalLoader()
   const [createCategory, { loading: loadingCreate }] = useMutation(CREATE_CATEGORY_MUTATION, {
     refetchQueries: [
       {
@@ -29,7 +27,6 @@ const NewWord = () => {
 
   const handleSubmit = async values => {
     try {
-      startLoading()
       await createCategory({
         variables: {
           data: {
@@ -43,8 +40,6 @@ const NewWord = () => {
       router.replace('/categories')
     } catch (error) {
       console.error(error)
-    } finally {
-      finishLoading()
     }
   }
 

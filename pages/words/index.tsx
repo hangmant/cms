@@ -18,7 +18,6 @@ import Link from 'next/link'
 import React from 'react'
 import { DELETE_WORD_MUTATION } from '../../apollo/mutations'
 import { GET_WORDS } from '../../apollo/queries'
-import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 import { withAuthentication } from '../../hoc/Authenticate'
 
 const columns = [
@@ -45,7 +44,6 @@ function Words() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
-  const { startLoading, finishLoading } = useGlobalLoader()
 
   const { data } = useQuery(GET_WORDS, {
     pollInterval: 3000,
@@ -66,7 +64,6 @@ function Words() {
 
   const handleDeleteWord = _id => async () => {
     try {
-      startLoading()
       await deleteWord({
         variables: {
           _id,
@@ -74,8 +71,6 @@ function Words() {
       })
     } catch (error) {
       console.error(error)
-    } finally {
-      finishLoading()
     }
   }
 

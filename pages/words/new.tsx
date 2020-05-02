@@ -11,7 +11,6 @@ import React from 'react'
 import * as Yup from 'yup'
 import { CREATE_WORD_MUTATION } from '../../apollo/mutations'
 import { GET_CATEGORIES, GET_WORDS } from '../../apollo/queries'
-import { useGlobalLoader } from '../../hooks/useGlobalLoader'
 import { withAuthentication } from '../../hoc/Authenticate'
 
 const NewWord = () => {
@@ -19,7 +18,6 @@ const NewWord = () => {
 
   const router = useRouter()
   const { data, loading } = useQuery(GET_CATEGORIES)
-  const { startLoading, finishLoading } = useGlobalLoader()
   const [createWord, { loading: loadingCreateNew }] = useMutation(CREATE_WORD_MUTATION, {
     refetchQueries: [
       {
@@ -32,7 +30,6 @@ const NewWord = () => {
   const categories = get(data, 'categories', [])
 
   const handleSubmit = async values => {
-    startLoading()
     await createWord({
       variables: {
         data: {
@@ -41,7 +38,6 @@ const NewWord = () => {
         },
       },
     })
-    finishLoading()
     router.replace('/words')
   }
 

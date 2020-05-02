@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { IconButton, Chip } from '@material-ui/core'
+import { IconButton } from '@material-ui/core'
 import Fab from '@material-ui/core/Fab'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
@@ -16,9 +16,8 @@ import EditIcon from '@material-ui/icons/Edit'
 import { get } from 'lodash'
 import Link from 'next/link'
 import React from 'react'
-import { DELETE_WORD_MUTATION, DELETE_CATEGORY_MUTATION } from '../../apollo/mutations'
-import { GET_WORDS, GET_CATEGORIES } from '../../apollo/queries'
-import { useGlobalLoader } from '../../hooks/useGlobalLoader'
+import { DELETE_CATEGORY_MUTATION } from '../../apollo/mutations'
+import { GET_CATEGORIES } from '../../apollo/queries'
 import { withAuthentication } from '../../hoc/Authenticate'
 
 type ColumnType = {
@@ -69,7 +68,6 @@ function Words() {
   const classes = useStyles()
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(100)
-  const { startLoading, finishLoading } = useGlobalLoader()
 
   const { data } = useQuery(GET_CATEGORIES, {
     pollInterval: 3000,
@@ -91,7 +89,6 @@ function Words() {
 
   const handleDeleteWord = _id => async () => {
     try {
-      startLoading()
       await deleteCategory({
         variables: {
           _id,
@@ -99,8 +96,6 @@ function Words() {
       })
     } catch (error) {
       console.error(error)
-    } finally {
-      finishLoading()
     }
   }
 

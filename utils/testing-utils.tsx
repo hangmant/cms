@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@material-ui/core/styles'
 import { render, RenderOptions, queries, RenderResult } from '@testing-library/react'
 import React from 'react'
-import { defaultTheme } from '../themes/default.theme'
+import { defaultTheme } from '../themes/default'
 import * as customQueries from './custom-queries'
 
 type AllTheProvidersProps = {

@@ -11,13 +11,11 @@ import * as Yup from 'yup'
 import { UPDATE_CATEGORY_MUTATION } from '../../../apollo/mutations'
 import { GET_CATEGORIES, GET_CATEGORY } from '../../../apollo/queries'
 import Phone from '../../../components/Phone'
-import { useGlobalLoader } from '../../../hooks/useGlobalLoader'
 import { withAuthentication } from '../../../hoc/Authenticate'
 
 const NewWord = () => {
   const classes = useStyles()
   const router = useRouter()
-  const { startLoading, finishLoading } = useGlobalLoader()
 
   const { categoryId } = router.query
 
@@ -39,7 +37,6 @@ const NewWord = () => {
   const category = get(data, 'category')
 
   const handleSubmit = async values => {
-    startLoading()
     await updateCategory({
       variables: {
         _id: categoryId,
@@ -50,7 +47,6 @@ const NewWord = () => {
         },
       },
     })
-    finishLoading()
     router.replace('/categories')
   }
 

@@ -21,7 +21,6 @@ import Router from 'next/router'
 import React, { useState } from 'react'
 import { MENU_ITEMS } from '../constants/menu'
 import { GlobalContextProvider } from '../contexts/globalContext'
-import GlobalLoader from './GlobalLoader'
 
 const drawerWidth = 240
 
@@ -109,7 +108,6 @@ export default function PersistentDrawerLeft({ children }) {
             [classes.appBarShift]: open,
           })}
         >
-          <GlobalLoader />
           <Toolbar>
             <IconButton
               color="inherit"
