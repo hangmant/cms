@@ -4,15 +4,21 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Separator from './shared/Separator'
 import { ResLoginLocal } from '../interfaces/res-login-local.interface'
+import fetch from 'isomorphic-fetch'
+import { window } from 'browser-monads'
 
 export const Login = () => {
   const [username, setUsername] = useState<string>('calderon@gmail.com')
   const [password, setPassword] = useState<string>('mailero')
 
+  const redirectToDashboard = () => {
+    window.location.replace('/words')
+  }
+
   useEffect(() => {
     const isAuthenticated = window.localStorage.getItem('token')
     if (isAuthenticated) {
-      Router.replace('/words')
+      redirectToDashboard()
     }
   }, [])
 
@@ -37,7 +43,7 @@ export const Login = () => {
 
       localStorage.setItem('token', body.token)
 
-      await Router.replace('/words')
+      redirectToDashboard()
     } catch (error) {
       console.error('Error on login', error)
     }
