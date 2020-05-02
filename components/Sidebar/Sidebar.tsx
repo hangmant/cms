@@ -15,6 +15,7 @@ import { noop } from '../../utils/shared.utils'
 import SidebarNav from './child/SidebarNav'
 import { SIDEBAR_WIDTH } from './sidebar.constants'
 import SidebarItem from './child/SidebarItem'
+import { Profile } from './child/Profile'
 
 type SidebarProps = {
   open?: boolean
@@ -49,6 +50,7 @@ export const Sidebar = ({ open = false, onClose = noop }: SidebarProps) => {
           {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>
+      <Profile />
       <Divider />
       <SidebarNav />
       <Divider />
