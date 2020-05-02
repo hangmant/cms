@@ -1,7 +1,6 @@
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
-import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -10,11 +9,12 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { window } from 'browser-monads'
-import NextLink from 'next/link'
 import Router from 'next/router'
 import React from 'react'
 import { noop } from '../../utils/shared.utils'
-import { SIDEBAR_ITEMS, SIDEBAR_WIDTH } from './sidebar.constants'
+import SidebarNav from './child/SidebarNav'
+import { SIDEBAR_WIDTH } from './sidebar.constants'
+import SidebarItem from './child/SidebarItem'
 
 type SidebarProps = {
   open?: boolean
@@ -50,24 +50,10 @@ export const Sidebar = ({ open = false, onClose = noop }: SidebarProps) => {
         </IconButton>
       </div>
       <Divider />
-      <List>
-        {SIDEBAR_ITEMS.map((menuItem, index) => (
-          <NextLink key={index} href={menuItem.to} passHref>
-            <ListItem component="a" button>
-              <ListItemIcon>
-                <menuItem.icon />
-              </ListItemIcon>
-              <ListItemText primary={menuItem.title} />
-            </ListItem>
-          </NextLink>
-        ))}
-      </List>
+      <SidebarNav />
       <Divider />
-      <ListItem onClick={handleLogout} component="a" button>
-        <ListItemIcon>
-          <ExitToAppIcon />
-        </ListItemIcon>
-        <ListItemText primary={'Logout'} />
+      <ListItem disableGutters>
+        <SidebarItem onClick={handleLogout} title="Logout" IconComponent={ExitToAppIcon} />
       </ListItem>
     </Drawer>
   )
