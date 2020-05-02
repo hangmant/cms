@@ -1,6 +1,6 @@
 import { Button, Card, Divider, TextField } from '@material-ui/core'
 import Router from 'next/router'
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Separator from './shared/Separator'
 import { ResLoginLocal } from '../interfaces/res-login-local.interface'
@@ -9,7 +9,7 @@ export const Login = () => {
   const [username, setUsername] = useState<string>('calderon@gmail.com')
   const [password, setPassword] = useState<string>('mailero')
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const isAuthenticated = window.localStorage.getItem('token')
     if (isAuthenticated) {
       Router.replace('/words')
