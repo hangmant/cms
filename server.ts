@@ -1,13 +1,12 @@
 import express, { Request, Response } from 'express'
 import next from 'next'
 import nextI18next from './i18n'
+import nextI18NextMiddleware from 'next-i18next/middleware'
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 const port = process.env.PORT || 3000
-
-const nextI18NextMiddleware = require('next-i18next/middleware').default
 
 ;(async () => {
   try {
