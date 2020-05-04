@@ -13,6 +13,8 @@ import Head from 'next/head'
 import React from 'react'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
+import { getJwt } from '../api/auth/auth'
+import { getCookie } from '../api/session'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -54,11 +56,11 @@ class MyApp extends App<{ apollo: ApolloClient<any> }> {
 }
 
 export default withApollo(
-  (
-    {
-      /* initialState */
-    }
-  ) => {
+  ({
+    /* initialState */
+    ctx = {},
+  }) => {
+    const token = getCookie('jwt', ctx.req)
     return new ApolloClient({
       link: ApolloLink.from([
         onError(({ graphQLErrors, networkError }) => {
@@ -76,7 +78,7 @@ export default withApollo(
         new HttpLink({
           uri: 'http://localhost:8087/graphql',
           headers: {
-            Authorization: `Bearer ${window.localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
           },
         }),
       ]),

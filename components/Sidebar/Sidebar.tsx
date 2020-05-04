@@ -2,20 +2,18 @@ import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import { window } from 'browser-monads'
 import Router from 'next/router'
 import React from 'react'
+import { removeCookie } from '../../api/session'
 import { noop } from '../../utils/shared.utils'
+import { Profile } from './child/Profile'
+import SidebarItem from './child/SidebarItem'
 import SidebarNav from './child/SidebarNav'
 import { SIDEBAR_WIDTH } from './sidebar.constants'
-import SidebarItem from './child/SidebarItem'
-import { Profile } from './child/Profile'
 
 type SidebarProps = {
   open?: boolean
@@ -31,7 +29,7 @@ export const Sidebar = ({ open = false, onClose = noop }: SidebarProps) => {
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('token')
+    removeCookie('jwt')
     Router.replace('/login')
   }
 

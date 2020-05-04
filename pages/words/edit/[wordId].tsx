@@ -26,7 +26,6 @@ const NewWord = () => {
       _id: wordId,
     },
   })
-  console.log('Dante: NewWord -> data', data)
 
   const { data: categoriesData, loading: loadingCategories } = useQuery(GET_CATEGORIES)
 

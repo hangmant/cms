@@ -1,11 +1,11 @@
 import { Button, Card, Divider, TextField } from '@material-ui/core'
-import Router from 'next/router'
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import Separator from './shared/Separator'
-import { ResLoginLocal } from '../interfaces/res-login-local.interface'
-import fetch from 'isomorphic-fetch'
 import { window } from 'browser-monads'
+import fetch from 'isomorphic-fetch'
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { setCookie } from '../api/session'
+import { ResLoginLocal } from '../interfaces/res-login-local.interface'
+import Separator from './shared/Separator'
 
 export const Login = () => {
   const [username, setUsername] = useState<string>('calderon@gmail.com')
@@ -14,13 +14,6 @@ export const Login = () => {
   const redirectToDashboard = () => {
     window.location.replace('/words')
   }
-
-  useEffect(() => {
-    const isAuthenticated = window.localStorage.getItem('token')
-    if (isAuthenticated) {
-      redirectToDashboard()
-    }
-  }, [])
 
   const onClickLogIn = async () => {
     try {
@@ -41,6 +34,7 @@ export const Login = () => {
         throw new Error('You are not authenticated')
       }
 
+      setCookie('jwt', body.token)
       localStorage.setItem('token', body.token)
 
       redirectToDashboard()
