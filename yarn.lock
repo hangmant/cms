@@ -1602,6 +1602,11 @@
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
 
+"@types/lodash@^4.14.150":
+  version "4.14.150"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.150.tgz#649fe44684c3f1fcb6164d943c5a61977e8cf0bd"
+  integrity sha512-kMNLM5JBcasgYscD9x/Gvr6lTAv2NVgsKtet/hm93qMyf/D1pt+7jeEZklKJKxMVmXjxbRVQQGfqDSfipYCO6w==
+
 "@types/lscache@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@types/lscache/-/lscache-1.3.0.tgz#03840a670129220ae6140937f9c3c4816a0d1a1f"

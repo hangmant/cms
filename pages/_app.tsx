@@ -13,6 +13,9 @@ import React from 'react'
 import { getCookie } from '../api/session'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
+import get from 'lodash/get'
+import { window } from 'browser-monads'
+import { redirect } from '../api/auth.utils'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -64,17 +67,26 @@ const authLink = setContext(({ context = {} }, { headers }) => {
   }
 })
 
-export default withApollo(({ initialState }) => {
+export default withApollo(({ initialState, ctx = {} }) => {
   return new ApolloClient({
     link: authLink
       .concat(
-        onError(({ graphQLErrors, networkError }) => {
+        onError(({ graphQLErrors, networkError, response }) => {
           if (graphQLErrors) {
             graphQLErrors.forEach(({ message, locations, path }) => {
               console.log(
                 `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
               )
             })
+
+            /** redirect  */
+            if (process.browser) {
+              const status = get(response, 'errors[0].extensions.exception.status')
+              if ([401].includes(status)) {
+                console.error('Redirecting to login')
+                redirect(ctx, '/login')
+              }
+            }
           }
           if (networkError) {
             console.log(`[Network error]: ${networkError}`)
