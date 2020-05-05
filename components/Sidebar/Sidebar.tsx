@@ -14,6 +14,7 @@ import { Profile } from './child/Profile'
 import SidebarItem from './child/SidebarItem'
 import SidebarNav from './child/SidebarNav'
 import { SIDEBAR_WIDTH } from './sidebar.constants'
+import { useApolloClient } from '@apollo/react-hooks'
 
 type SidebarProps = {
   open?: boolean
@@ -23,14 +24,18 @@ type SidebarProps = {
 export const Sidebar = ({ open = false, onClose = noop }: SidebarProps) => {
   const classes = useStyles()
   const theme = useTheme()
+  const client = useApolloClient()
 
   const handleClose = () => {
     onClose(false)
   }
 
   const handleLogout = () => {
+    console.log('Removing cookie and reset store')
     removeCookie('jwt')
-    Router.replace('/login')
+    // Router.replace('/login')
+    client.restore({})
+    client.resetStore()
   }
 
   return (

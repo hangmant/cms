@@ -135,11 +135,11 @@ function Words() {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-      <Fab aria-label={'fab.label'} className={classes.fab} color={'primary'}>
-        <Link href={`/words/new`}>
+      <Link href={`/words/new`}>
+        <Fab aria-label={'fab.label'} className={classes.fab} color={'primary'}>
           <AddIcon />
-        </Link>
-      </Fab>
+        </Fab>
+      </Link>
     </Paper>
   )
 }

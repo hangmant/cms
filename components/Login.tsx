@@ -35,7 +35,6 @@ export const Login = () => {
       }
 
       setCookie('jwt', body.token)
-      localStorage.setItem('token', body.token)
 
       redirectToDashboard()
     } catch (error) {

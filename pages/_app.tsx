@@ -3,18 +3,16 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
-import { ApolloLink } from 'apollo-link'
+import { setContext } from 'apollo-link-context'
 import { onError } from 'apollo-link-error'
 import { HttpLink } from 'apollo-link-http'
-import { window } from 'browser-monads'
 import withApollo from 'next-with-apollo'
 import App from 'next/app'
 import Head from 'next/head'
 import React from 'react'
+import { getCookie } from '../api/session'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
-import { getJwt } from '../api/auth/auth'
-import { getCookie } from '../api/session'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -55,14 +53,21 @@ class MyApp extends App<{ apollo: ApolloClient<any> }> {
   }
 }
 
-export default withApollo(
-  ({
-    /* initialState */
-    ctx = {},
-  }) => {
-    const token = getCookie('jwt', ctx.req)
-    return new ApolloClient({
-      link: ApolloLink.from([
+/** get updated token in every request */
+const authLink = setContext(({ context = {} }, { headers }) => {
+  const token = getCookie('jwt', context.req)
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  }
+})
+
+export default withApollo(({ initialState }) => {
+  return new ApolloClient({
+    link: authLink
+      .concat(
         onError(({ graphQLErrors, networkError }) => {
           if (graphQLErrors) {
             graphQLErrors.forEach(({ message, locations, path }) => {
@@ -74,15 +79,13 @@ export default withApollo(
           if (networkError) {
             console.log(`[Network error]: ${networkError}`)
           }
-        }),
+        })
+      )
+      .concat(
         new HttpLink({
           uri: 'http://localhost:8087/graphql',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-      ]),
-      cache: new InMemoryCache(),
-    })
-  }
-)(MyApp)
+        })
+      ),
+    cache: new InMemoryCache().restore(initialState || {}),
+  })
+})(MyApp)
