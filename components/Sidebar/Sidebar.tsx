@@ -1,12 +1,12 @@
+import { useApolloClient } from '@apollo/react-hooks'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
 import ListItem from '@material-ui/core/ListItem'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import Router from 'next/router'
 import React from 'react'
 import { removeCookie } from '../../api/session'
 import { noop } from '../../utils/shared.utils'
@@ -14,7 +14,6 @@ import { Profile } from './child/Profile'
 import SidebarItem from './child/SidebarItem'
 import SidebarNav from './child/SidebarNav'
 import { SIDEBAR_WIDTH } from './sidebar.constants'
-import { useApolloClient } from '@apollo/react-hooks'
 
 type SidebarProps = {
   open?: boolean
@@ -22,7 +21,9 @@ type SidebarProps = {
 }
 
 export const Sidebar = ({ open = false, onClose = noop }: SidebarProps) => {
-  const classes = useStyles()
+  const classes = useStyles({
+    open,
+  })
   const theme = useTheme()
   const client = useApolloClient()
 
@@ -64,9 +65,9 @@ export const Sidebar = ({ open = false, onClose = noop }: SidebarProps) => {
   )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<Theme, { open: boolean }>(theme => ({
   drawer: {
-    width: SIDEBAR_WIDTH,
+    width: props => (props.open ? SIDEBAR_WIDTH : 0),
     flexShrink: 0,
   },
   drawerPaper: {

@@ -1,19 +1,22 @@
 import AppBar from '@material-ui/core/AppBar'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import MenuIcon from '@material-ui/icons/Menu'
 import clsx from 'clsx'
-import React, { useState } from 'react'
+import React from 'react'
 import { GlobalContextProvider } from '../contexts/globalContext'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { Sidebar } from './Sidebar'
 import { SIDEBAR_WIDTH } from './Sidebar/sidebar.constants'
 
 export default function PersistentDrawerLeft({ children }) {
-  const classes = useStyles()
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useLocalStorage('sidebar_open', true)
+  const classes = useStyles({
+    open,
+  })
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -27,19 +30,14 @@ export default function PersistentDrawerLeft({ children }) {
     <GlobalContextProvider>
       <div className={classes.root}>
         <CssBaseline />
-        <AppBar
-          position="fixed"
-          className={clsx(classes.appBar, {
-            [classes.appBarShift]: open,
-          })}
-        >
+        <AppBar position="fixed" className={clsx(classes.appBar)}>
           <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
-              className={clsx(classes.menuButton, open && classes.hide)}
+              className={classes.menuButton}
             >
               <MenuIcon />
             </IconButton>
@@ -49,11 +47,7 @@ export default function PersistentDrawerLeft({ children }) {
           </Toolbar>
         </AppBar>
         <Sidebar open={open} onClose={handleDrawerClose} />
-        <main
-          className={clsx(classes.content, {
-            [classes.contentShift]: open,
-          })}
-        >
+        <main className={clsx(classes.content)}>
           <div className={classes.drawerHeader} />
           {children}
         </main>
@@ -62,23 +56,23 @@ export default function PersistentDrawerLeft({ children }) {
   )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles<Theme, { open: boolean }>(theme => ({
   root: {
     display: 'flex',
   },
   appBar: {
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    width: `calc(100% - ${SIDEBAR_WIDTH}px)`,
-    marginLeft: SIDEBAR_WIDTH,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+    width: props => `calc(100% - ${props.open ? SIDEBAR_WIDTH : 0}px)`,
+    marginLeft: props => (props.open ? SIDEBAR_WIDTH : 'auto'),
+    transition: props =>
+      props.open
+        ? theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          })
+        : theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
   },
   drawerHeader: {
     display: 'flex',
@@ -89,24 +83,22 @@ const useStyles = makeStyles(theme => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-  },
-  hide: {
-    display: 'none',
+    display: props => (props.open ? 'none' : 'inherit'),
   },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: -SIDEBAR_WIDTH,
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
+    transition: props =>
+      props.open
+        ? theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          })
+        : theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+    // TODO: solve animation
+    // marginLeft: props => (props.open ? 0 : -0),
   },
 }))
