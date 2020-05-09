@@ -86,3 +86,13 @@ export const DELETE_CATEGORY_MUTATION = gql`
     }
   }
 `
+
+export const UPDATE_ME_MUTATION = gql`
+  mutation updateMe($data: UserUpdateInput!) {
+    updateMe(data: $data) {
+      _id
+      name
+      email
+    }
+  }
+`

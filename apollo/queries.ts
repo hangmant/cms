@@ -57,3 +57,13 @@ export const GET_CATEGORY = gql`
     }
   }
 `
+export const ME = gql`
+  query me {
+    me {
+      _id
+      name
+      email
+      __typename
+    }
+  }
+`

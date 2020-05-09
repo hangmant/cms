@@ -1,10 +1,11 @@
-import React from 'react'
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
+import React from 'react'
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
     margin: theme.spacing(1),
-    position: 'absolute',
+    // position: 'absolute',
+    // display: 'contents',
   },
   buttonProgress: {
     position: 'absolute',

@@ -13,29 +13,16 @@ import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import moment from 'moment'
 import React from 'react'
+import { User } from '../../interfaces/user.interface'
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  details: {
-    display: 'flex',
-  },
-  avatar: {
-    marginLeft: 'auto',
-    height: 110,
-    width: 100,
-    flexShrink: 0,
-    flexGrow: 0,
-  },
-  progress: {
-    marginTop: theme.spacing(2),
-  },
-  uploadButton: {
-    marginRight: theme.spacing(2),
-  },
-}))
+type AccountProfileProps = {
+  className?: any
+  user: User
+}
 
-export const AccountProfile = props => {
-  const { className, ...rest } = props
+export const AccountProfile = (props: AccountProfileProps) => {
+  const { className, user: authUser, ...rest } = props
+  console.log('Dante: AccountProfile -> authUser', authUser)
 
   const classes = useStyles()
 
@@ -44,7 +31,8 @@ export const AccountProfile = props => {
     city: 'Los Angeles',
     country: 'USA',
     timezone: 'GTM-7',
-    avatar: '/images/avatars/avatar_11.png',
+    avatar: 'https://www.w3schools.com/howto/img_avatar.png',
+    ...authUser,
   }
 
   return (
@@ -53,7 +41,7 @@ export const AccountProfile = props => {
         <div className={classes.details}>
           <div>
             <Typography gutterBottom variant="h2">
-              John Doe
+              {user.name}
             </Typography>
             <Typography color="textSecondary" variant="body1">
               {user.city}, {user.country}
@@ -79,3 +67,23 @@ export const AccountProfile = props => {
     </Card>
   )
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  details: {
+    display: 'flex',
+  },
+  avatar: {
+    marginLeft: 'auto',
+    height: 110,
+    width: 100,
+    flexShrink: 0,
+    flexGrow: 0,
+  },
+  progress: {
+    marginTop: theme.spacing(2),
+  },
+  uploadButton: {
+    marginRight: theme.spacing(2),
+  },
+}))
