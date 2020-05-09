@@ -14,6 +14,7 @@ import clsx from 'clsx'
 import moment from 'moment'
 import React from 'react'
 import { User } from '../../interfaces/user.interface'
+import { ChangeAvatar } from '../ChangeAvatar'
 
 type AccountProfileProps = {
   className?: any
@@ -59,9 +60,18 @@ export const AccountProfile = (props: AccountProfileProps) => {
       </CardContent>
       <Divider />
       <CardActions>
-        <Button className={classes.uploadButton} color="primary" variant="text">
-          Upload picture
-        </Button>
+        <ChangeAvatar>
+          {({ handleOpen }) => (
+            <Button
+              className={classes.uploadButton}
+              onClick={handleOpen}
+              color="primary"
+              variant="text"
+            >
+              Upload picture
+            </Button>
+          )}
+        </ChangeAvatar>
         <Button variant="text">Remove picture</Button>
       </CardActions>
     </Card>

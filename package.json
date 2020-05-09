@@ -39,6 +39,7 @@
     "prop-types": "latest",
     "react": "latest",
     "react-addons-test-utils": "^15.6.2",
+    "react-avatar-editor": "^11.0.9",
     "react-color": "^2.18.0",
     "react-dom": "latest",
     "sinon": "^9.0.2",
