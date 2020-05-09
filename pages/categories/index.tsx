@@ -42,7 +42,7 @@ const columns: ColumnType[] = [
     label: 'Description',
     minWidth: 170,
   },
-  { id: 'options', key: 'name', label: 'Options', minWidth: 100 },
+  { id: 'options', key: 'name', label: 'Actions', minWidth: 100 },
 ]
 
 const useStyles = makeStyles(theme => ({

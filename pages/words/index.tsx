@@ -23,7 +23,7 @@ import { withAuthentication } from '../../hoc/Authenticate'
 const columns = [
   { id: 'name', key: 'name', label: 'Name', minWidth: 170 },
   { id: 'category', key: 'category.name', label: 'Category', minWidth: 100 },
-  { id: 'options', key: 'name', label: 'Options', minWidth: 100 },
+  { id: 'options', key: 'name', label: 'Actions', minWidth: 100 },
 ]
 
 const useStyles = makeStyles(theme => ({
