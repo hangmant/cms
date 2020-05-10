@@ -1,30 +1,72 @@
-import React, { useState } from 'react'
 import {
-  Modal,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  makeStyles,
-  DialogActions,
   Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
   Divider,
+  makeStyles,
   Slider,
   withStyles,
 } from '@material-ui/core'
+import React, { useState, useRef } from 'react'
 import AvatarEditor from 'react-avatar-editor'
-import { graphqlSync } from 'graphql'
+import { fileSizeIsBetween } from '../utils/files'
+
+export const validImageExtensions = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
 export const ChangeAvatar = ({ children }) => {
-  const [open, setOpen] = useState<boolean>(true)
+  const [open, setOpen] = useState<boolean>(false)
   const [scale, setScale] = useState<number>(1.0)
-  console.log('Dante: ChangeAvatar -> scale', scale)
+  const [image, setImage] = useState<string>('')
+  const [resultImage, setResultImage] = useState<string>('')
+  const editor = useRef<any>()
+  console.log('Dante: ChangeAvatar -> editor', editor)
 
   const classes = useStyles()
 
-  const handleOpen = () => setOpen(true)
+  const handleOpen = (event: any) => {
+    try {
+      const file = event.target.files[0]
+      if (!file) return
+
+      if (!fileSizeIsBetween(file.size, 4, 20 * 1024)) {
+        console.error('File is too big')
+        return
+      }
+
+      if (!validImageExtensions.includes(file.type)) {
+        console.error('File has not a valid extension')
+        return
+      }
+
+      setImage(file)
+      setOpen(true)
+    } catch {}
+  }
+
   const handleClose = () => setOpen(false)
+
   const handleChangeScale = (_, newValue: number) => {
     setScale(newValue)
+  }
+
+  const handleSave = () => {
+    if (editor) {
+      const canvas = editor.current.getImage().toDataURL()
+      let imageURL
+      fetch(canvas)
+        .then(res => res.blob())
+        .then(blob => {
+          imageURL = window.URL.createObjectURL(blob)
+          console.log('Dante: handleSave -> imageURL', imageURL)
+        })
+      setResultImage(canvas)
+      console.log('Dante: handleSave -> canvas', canvas)
+      const canvasScaled = editor.current.getImageScaledToCanvas()
+      console.log('Dante: handleSave -> canvasScaled', canvasScaled)
+    } else {
+      console.error('Editor dont loaded successfully')
+    }
   }
 
   return (
@@ -34,14 +76,15 @@ export const ChangeAvatar = ({ children }) => {
         <Divider />
         <div>
           <AvatarEditor
-            image="https://www.w3schools.com/howto/img_avatar.png"
-            width={300}
-            height={300}
+            image={image}
+            ref={editor}
+            width={400}
+            height={400}
             style={{
               background: '#f3f3f3',
             }}
             border={20}
-            color={[255, 255, 255, 0.6]} // RGBA
+            color={[255, 255, 255, 0.6]}
             scale={scale}
             rotate={0}
           />
@@ -55,17 +98,27 @@ export const ChangeAvatar = ({ children }) => {
             />
           </div>
           <Divider />
+          <img src={resultImage} width={100} />
         </div>
         <DialogActions>
           <Button color="primary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button color="primary" variant="contained">
+          <Button onClick={handleSave} color="primary" variant="contained">
             Update
           </Button>
         </DialogActions>
       </Dialog>
-      {children({ handleOpen })}
+      <input
+        accept="image/*"
+        className={classes.inputFile}
+        id="avatar-button-file"
+        multiple
+        type="file"
+        onChange={handleOpen}
+      />
+      {/** Make sure of add  component="span" property to children component */}
+      <label htmlFor="avatar-button-file">{children}</label>
     </React.Fragment>
   )
 }
@@ -110,5 +163,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     marginRight: 20,
     paddingLeft: 25,
+  },
+  inputFile: {
+    display: 'none',
   },
 }))

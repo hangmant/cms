@@ -61,16 +61,14 @@ export const AccountProfile = (props: AccountProfileProps) => {
       <Divider />
       <CardActions>
         <ChangeAvatar>
-          {({ handleOpen }) => (
-            <Button
-              className={classes.uploadButton}
-              onClick={handleOpen}
-              color="primary"
-              variant="text"
-            >
-              Upload picture
-            </Button>
-          )}
+          <Button
+            component="span"
+            className={classes.uploadButton}
+            color="primary"
+            variant="text"
+          >
+            Upload picture
+          </Button>
         </ChangeAvatar>
         <Button variant="text">Remove picture</Button>
       </CardActions>
