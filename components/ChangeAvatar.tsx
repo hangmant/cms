@@ -10,11 +10,13 @@ import {
 } from '@material-ui/core'
 import React, { useState, useRef } from 'react'
 import AvatarEditor from 'react-avatar-editor'
+import { useSnackbar } from 'notistack'
 import { fileSizeIsBetween } from '../utils/files'
 
 export const validImageExtensions = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
 export const ChangeAvatar = ({ children }) => {
+  const { enqueueSnackbar } = useSnackbar()
   const [open, setOpen] = useState<boolean>(false)
   const [scale, setScale] = useState<number>(1.0)
   const [image, setImage] = useState<string>('')
@@ -30,12 +32,16 @@ export const ChangeAvatar = ({ children }) => {
       if (!file) return
 
       if (!fileSizeIsBetween(file.size, 4, 20 * 1024)) {
-        console.error('File is too big')
+        enqueueSnackbar('File is too big', {
+          variant: 'error',
+        })
         return
       }
 
       if (!validImageExtensions.includes(file.type)) {
-        console.error('File has not a valid extension')
+        enqueueSnackbar('File has not a valid extension', {
+          variant: 'error',
+        })
         return
       }
 
