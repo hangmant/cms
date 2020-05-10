@@ -1,7 +1,7 @@
 import React from 'react'
 import { Login } from '../components/Login'
-import { getJwt } from '../api/auth/auth'
-import { redirect } from '../api/auth.utils'
+import { getJwt } from '../apis/auth/auth'
+import { redirect } from '../apis/auth.utils'
 
 const LoginPage = () => {
   return <Login />

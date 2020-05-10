@@ -3,7 +3,7 @@ import { window } from 'browser-monads'
 import fetch from 'isomorphic-fetch'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { setCookie } from '../api/session'
+import { setCookie } from '../apis/session'
 import { ResLoginLocal } from '../interfaces/res-login-local.interface'
 import Separator from './shared/Separator'
 
