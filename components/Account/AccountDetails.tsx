@@ -27,13 +27,14 @@ export const AccountDetails = (props: AccountDetailsProps) => {
 
   const classes = useStyles()
 
-  const user = {
-    firstName: props.user.name || ' ',
-    lastName: 'Zhi',
+  const user: User = {
+    username: ' ',
+    firstName: ' ',
+    lastName: ' ',
+    address: ' ',
+    country: ' ',
     email: ' ',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA',
+    phone: ' ',
     ...props.user,
   }
   console.log('Dante: AccountDetails -> user', user)

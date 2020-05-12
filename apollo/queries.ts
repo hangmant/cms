@@ -61,7 +61,12 @@ export const ME = gql`
   query me {
     me {
       _id
-      name
+      username
+      firstName
+      lastName
+      phone
+      address
+      country
       email
       __typename
     }

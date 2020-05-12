@@ -96,3 +96,19 @@ export const UPDATE_ME_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_USER_MUTATION = gql`
+  mutation createUser($data: UserCreateInput!) {
+    createUser(data: $data) {
+      _id
+      username
+      firstName
+      lastName
+      phone
+      address
+      country
+      email
+      __typename
+    }
+  }
+`
