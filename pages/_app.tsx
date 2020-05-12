@@ -6,16 +6,16 @@ import { ApolloClient } from 'apollo-client'
 import { setContext } from 'apollo-link-context'
 import { onError } from 'apollo-link-error'
 import { HttpLink } from 'apollo-link-http'
+import get from 'lodash/get'
 import withApollo from 'next-with-apollo'
 import App from 'next/app'
 import Head from 'next/head'
+import { SnackbarProvider } from 'notistack'
 import React from 'react'
-import { getCookie } from '../api/session'
+import { redirect } from '../apis/auth.utils'
+import { getCookie } from '../apis/session'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
-import get from 'lodash/get'
-import { window } from 'browser-monads'
-import { redirect } from '../api/auth.utils'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -33,22 +33,24 @@ class MyApp extends App<{ apollo: ApolloClient<any> }> {
       <ApolloProvider client={apollo}>
         <React.Fragment>
           <ThemeProvider theme={defaultTheme}>
-            <NextProgress
-              color="#f89402"
-              options={{ trickleSpeed: 50 }}
-              height="3"
-              showAfterMs={200}
-              spinner
-            />
-            <CssBaseline />
-            <Head>
-              <title>Hangman CMS</title>
-              <meta
-                name="viewport"
-                content="minimum-scale=1, initial-scale=1, width=device-width"
+            <SnackbarProvider autoHideDuration={4000} maxSnack={3}>
+              <NextProgress
+                color="#f89402"
+                options={{ trickleSpeed: 50 }}
+                height="3"
+                showAfterMs={200}
+                spinner
               />
-            </Head>
-            <Component {...pageProps} />
+              <CssBaseline />
+              <Head>
+                <title>Hangman CMS</title>
+                <meta
+                  name="viewport"
+                  content="minimum-scale=1, initial-scale=1, width=device-width"
+                />
+              </Head>
+              <Component {...pageProps} />
+            </SnackbarProvider>
           </ThemeProvider>
         </React.Fragment>
       </ApolloProvider>

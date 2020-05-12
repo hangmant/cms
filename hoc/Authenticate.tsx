@@ -3,8 +3,8 @@ import Router, { useRouter } from 'next/router'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import { User } from '../interfaces/user.interface'
-import { isAuthenticated, getJwt } from '../api/auth/auth'
-import { redirect } from '../api/auth.utils'
+import { isAuthenticated, getJwt } from '../apis/auth/auth'
+import { redirect } from '../apis/auth.utils'
 
 type AuthUserInfo = boolean
 
