@@ -55,9 +55,7 @@ export const AccountDetails = (props: AccountDetailsProps) => {
   ]
 
   const handleSubmit = values => {
-    onUpdateUser({
-      name: values.firstName,
-    })
+    onUpdateUser(values)
   }
 
   return (
@@ -99,6 +97,7 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                       fullWidth
                       label="Email Address"
                       name="email"
+                      disabled
                       onChange={handleChange}
                       required
                       value={values.email}
@@ -119,13 +118,13 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                   <Grid item md={6} xs={12}>
                     <TextField
                       fullWidth
-                      label="Select State"
-                      name="state"
+                      label="Address"
+                      name="address"
                       onChange={handleChange}
                       required
                       select
                       SelectProps={{ native: true }}
-                      value={values.state}
+                      value={values.address}
                       variant="outlined"
                     >
                       {states.map(option => (
@@ -138,11 +137,11 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                   <Grid item md={6} xs={12}>
                     <TextField
                       fullWidth
-                      label="Country"
-                      name="country"
+                      label="Address"
+                      name="address"
                       onChange={handleChange}
                       required
-                      value={values.country}
+                      value={values.address}
                       variant="outlined"
                     />
                   </Grid>
