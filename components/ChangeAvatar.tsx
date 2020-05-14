@@ -24,7 +24,6 @@ export const ChangeAvatar = ({ children }) => {
   const [image, setImage] = useState<any>()
   const [resultImage, setResultImage] = useState<string>('')
   const editor = useRef<any>()
-  console.log('Dante: ChangeAvatar -> editor', editor)
 
   const classes = useStyles()
 
@@ -59,17 +58,19 @@ export const ChangeAvatar = ({ children }) => {
   }
 
   const uploadFileToS3 = (presignedPostData, file) => {
+    console.log('Dante: handleOpen -> file', file)
+    console.log('Dante: handleOpen -> presignedPostData', presignedPostData)
     return new Promise((resolve, reject) => {
       const formData = new FormData()
-      Object.keys(presignedPostData.fields).forEach(key => {
-        formData.append(key, presignedPostData.fields[key])
+      Object.keys(presignedPostData.signature).forEach(key => {
+        formData.append(key, presignedPostData.signature[key])
       })
 
       const buf = new Buffer(file.replace(/^data:image\/\w+;base64,/, ''), 'base64')
 
       // Actual file has to be appended last.
       formData.append('ContentEncoding', 'base64')
-      formData.append('body', file)
+      formData.append('body', buf.toString())
 
       const xhr = new XMLHttpRequest()
       xhr.open('POST', presignedPostData.url, true)
@@ -89,33 +90,51 @@ export const ChangeAvatar = ({ children }) => {
     return timestamp + file.name.replace(/ /g, '_')
   }
 
+  const urltoFile = (url, filename, mimeType) => {
+    mimeType = mimeType || (url.match(/^data:([^;]+);/) || '')[1]
+    return fetch(url)
+      .then(function (res) {
+        return res.arrayBuffer()
+      })
+      .then(function (buf) {
+        return new File([buf], filename, { type: mimeType })
+      })
+  }
+
   const handleSave = async () => {
     try {
       if (editor) {
         const canvas = editor.current.getImage().toDataURL()
-        console.log('Dante: handleSave -> canvas', canvas)
-        // let imageURL
-        // fetch(canvas)
-        //   .then(res => res.blob())
-        //   .then(blob => {
-        //     imageURL = window.URL.createObjectURL(blob)
-        //     console.log('Dante: handleSave -> imageURL', imageURL)
-        // })
-        setResultImage(canvas)
-        const type = canvas.split(';')[0].split('/')[1]
-        console.log('Dante: handleSave -> type', type)
-        console.log('Dante: handleSave -> type', type)
-        console.log('Dante: handleSave -> type', type)
-        const pre = await generateStorageToken(
-          {
-            contentType: `image/${type}`,
-            key: `asdlfjlasdlj.${type}`,
-          },
-          getCookieFromBrowser('jwt')
-        )
 
-        // await upload(pre.url, canvas, pre.fields)
-        await uploadFileToS3(pre, canvas)
+        const imageFIle = await urltoFile(canvas, 'a.png', 'image/png')
+        // console.log('Dante: handleSave -> res', res)
+
+        const canvas222 = editor.current.getImage()
+        const scalewd = editor.current.getImageScaledToCanvas()
+        console.log('Dante: handleSave -> scalewd', scalewd)
+        console.log('Dante: handleSave -> canvas222', canvas222)
+        let imageURL
+        fetch(canvas)
+          .then(res => res.blob())
+          .then(blob => (imageURL = window.URL.createObjectURL(blob)))
+        console.log('Dante: handleSave -> imageURL', imageURL)
+        // setResultImage(canvas)
+        // const type = canvas.split(';')[0].split('/')[1]
+        // const pre = await generateStorageToken(
+        //   {
+        //     contentType: `image/${type}`,
+        //     key: `operator/hola.${type}`,
+        //   },
+        //   getCookieFromBrowser('jwt')
+        // )
+
+        // await upload(pre.url, canvas, pre.signature, {
+        //   // 'Content-Encoding': 'base64',
+        //   'x-amz-acl': 'public-read',
+        //   'Content-Type': `image/${type}`,
+        // })
+        // await uploadFileToS3(pre, canvas)
+        // await uploadFileToS3(pre, canvas)
       } else {
         console.error('Editor dont loaded successfully')
       }
@@ -130,29 +149,24 @@ export const ChangeAvatar = ({ children }) => {
   const upload = async (url, file, tokenFields, headers = {}) => {
     const buf = new Buffer(file.replace(/^data:image\/\w+;base64,/, ''), 'base64')
 
-    // const response = await fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     // 'Content-Type': 'application/json',
-    //     // 'Content-Type': 'image/png',
-    //     'Content-Encoding': 'base64',
-    //     // 'Access-Control-Allow-Origin': 'no-cors',
-    //   },
-    //   body: JSON.stringify({
-    //     ...tokenFields,
-    //     file: buf,
-    //     ACL: 'public-read',
-    //     ContentEncoding: 'base64',
-    //   }),
-    // })
-
-    // const body = await response.json()
-
-    // if (!response.ok || !body) {
-    //   throw new Error('Bullshit: unknow error')
+    // const bodyString = {
+    //   ...tokenFields,
+    //   file: buf,
     // }
+    // console.log('Dante: upload -> body', bodyString)
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers,
+      // body: buf,
+    })
 
-    // return body
+    const body = await response.json()
+
+    if (!response.ok || !body) {
+      throw new Error('Bullshit: unknow error')
+    }
+
+    return body
   }
 
   return (
