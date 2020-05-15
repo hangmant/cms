@@ -30,9 +30,9 @@ export const AccountProfile = (props: AccountProfileProps) => {
   const classes = useStyles()
 
   const user: User = {
-    firstName: 'Shen Zhi',
-    lastName: 'Los Angeles',
-    address: 'USA',
+    firstName: ' ',
+    lastName: ' ',
+    address: ' ',
     avatar: 'https://aigenda.com/Content/img/empty-user-photo.png',
     ...authUser,
   }
@@ -50,9 +50,6 @@ export const AccountProfile = (props: AccountProfileProps) => {
             <Typography color="textSecondary" variant="body1">
               {user.address}, {user.country}
             </Typography>
-            {/* <Typography color="textSecondary" variant="body1">
-              {moment().format('hh:mm A')} ({user.timezone}) 
-            </Typography> */}
           </div>
           <Avatar className={classes.avatar} src={user.avatar} />
         </div>
