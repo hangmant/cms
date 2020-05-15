@@ -8,23 +8,27 @@ import {
   Slider,
   withStyles,
 } from '@material-ui/core'
+import axios from 'axios'
 import { useSnackbar } from 'notistack'
 import React, { useRef, useState } from 'react'
 import AvatarEditor from 'react-avatar-editor'
 import { getCookieFromBrowser } from '../apis/session'
 import { generateStorageToken } from '../apis/storage/storage'
-import { fileSizeIsBetween } from '../utils/files'
+import { dataURLToFile, fileSizeIsBetween, generateFileName } from '../utils/files'
 
 export const validImageExtensions = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
-export const ChangeAvatar = ({ children }) => {
+type ChangeAvatarProps = {
+  children?: React.ReactChild
+  onUpdateAvatar: (avatarUrl: string) => Promise<any>
+}
+
+export const ChangeAvatar = ({ children, onUpdateAvatar }: ChangeAvatarProps) => {
   const { enqueueSnackbar } = useSnackbar()
   const [open, setOpen] = useState<boolean>(false)
   const [scale, setScale] = useState<number>(1.0)
   const [image, setImage] = useState<any>()
-  const [resultImage, setResultImage] = useState<string>('')
   const editor = useRef<any>()
-  console.log('Dante: ChangeAvatar -> editor', editor)
 
   const classes = useStyles()
 
@@ -54,105 +58,43 @@ export const ChangeAvatar = ({ children }) => {
 
   const handleClose = () => setOpen(false)
 
-  const handleChangeScale = (_, newValue: number) => {
-    setScale(newValue)
-  }
-
-  const uploadFileToS3 = (presignedPostData, file) => {
-    return new Promise((resolve, reject) => {
-      const formData = new FormData()
-      Object.keys(presignedPostData.fields).forEach(key => {
-        formData.append(key, presignedPostData.fields[key])
-      })
-
-      const buf = new Buffer(file.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-
-      // Actual file has to be appended last.
-      formData.append('ContentEncoding', 'base64')
-      formData.append('body', file)
-
-      const xhr = new XMLHttpRequest()
-      xhr.open('POST', presignedPostData.url, true)
-      xhr.send(formData)
-      xhr.onload = function () {
-        this.status === 204 ? resolve() : reject(this.responseText)
-      }
-    })
-  }
-
-  const generateFileName = file => {
-    let getDate = new Date()
-    let timestamp = getDate.toISOString()
-    timestamp = timestamp.replace(/:/g, '-')
-    timestamp = timestamp.replace(/\./g, '-')
-
-    return timestamp + file.name.replace(/ /g, '_')
-  }
+  const handleChangeScale = (_, newValue: number) => setScale(newValue)
 
   const handleSave = async () => {
     try {
       if (editor) {
         const canvas = editor.current.getImage().toDataURL()
-        console.log('Dante: handleSave -> canvas', canvas)
-        // let imageURL
-        // fetch(canvas)
-        //   .then(res => res.blob())
-        //   .then(blob => {
-        //     imageURL = window.URL.createObjectURL(blob)
-        //     console.log('Dante: handleSave -> imageURL', imageURL)
-        // })
-        setResultImage(canvas)
-        const type = canvas.split(';')[0].split('/')[1]
-        console.log('Dante: handleSave -> type', type)
-        console.log('Dante: handleSave -> type', type)
-        console.log('Dante: handleSave -> type', type)
-        const pre = await generateStorageToken(
+        const imageFile = await dataURLToFile(canvas, 'avatar.png', 'image/png')
+
+        const { url } = await generateStorageToken(
           {
-            contentType: `image/${type}`,
-            key: `asdlfjlasdlj.${type}`,
+            contentType: imageFile.type,
+            key: generateFileName(imageFile),
           },
           getCookieFromBrowser('jwt')
         )
 
-        // await upload(pre.url, canvas, pre.fields)
-        await uploadFileToS3(pre, canvas)
+        await axios.put(url, imageFile, {
+          headers: {
+            'x-amz-acl': 'public-read',
+            'Content-Type': imageFile.type,
+          },
+        })
+
+        const urlS3 = url.substr(0, url.indexOf('?'))
+
+        await onUpdateAvatar(urlS3)
+        enqueueSnackbar('Avatar successful updated')
+        handleClose()
       } else {
-        console.error('Editor dont loaded successfully')
+        throw new Error('Editor dont loaded successfully')
       }
     } catch (error) {
-      enqueueSnackbar('Error ocurred', {
+      enqueueSnackbar('Error ocurred' + error.message, {
         variant: 'error',
       })
       console.error(error)
     }
-  }
-
-  const upload = async (url, file, tokenFields, headers = {}) => {
-    const buf = new Buffer(file.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-
-    // const response = await fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     // 'Content-Type': 'application/json',
-    //     // 'Content-Type': 'image/png',
-    //     'Content-Encoding': 'base64',
-    //     // 'Access-Control-Allow-Origin': 'no-cors',
-    //   },
-    //   body: JSON.stringify({
-    //     ...tokenFields,
-    //     file: buf,
-    //     ACL: 'public-read',
-    //     ContentEncoding: 'base64',
-    //   }),
-    // })
-
-    // const body = await response.json()
-
-    // if (!response.ok || !body) {
-    //   throw new Error('Bullshit: unknow error')
-    // }
-
-    // return body
   }
 
   return (
@@ -184,7 +126,6 @@ export const ChangeAvatar = ({ children }) => {
             />
           </div>
           <Divider />
-          <img src={resultImage} width={100} />
         </div>
         <DialogActions>
           <Button color="primary" onClick={handleClose}>
