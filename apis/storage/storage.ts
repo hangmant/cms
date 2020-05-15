@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch'
+import { ResSignedUrlDto } from '../../interfaces/res-signed-url.interface'
 import { config } from '../config'
 import { getCookie } from '../session'
 import { FileUploadInfo } from '../types/file-upload-info.type'
@@ -6,7 +7,7 @@ import { FileUploadInfo } from '../types/file-upload-info.type'
 export const generateStorageToken = async (
   fileUploadInfo: FileUploadInfo,
   token: string
-): Promise<any> => {
+): Promise<ResSignedUrlDto> => {
   const response = await fetch(`${config.hangmanApiREST}/storage/token`, {
     method: 'POST',
     headers: {

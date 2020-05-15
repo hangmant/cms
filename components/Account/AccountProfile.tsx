@@ -15,14 +15,16 @@ import moment from 'moment'
 import React from 'react'
 import { User } from '../../interfaces/user.interface'
 import { ChangeAvatar } from '../ChangeAvatar'
+import { ReqUpdateUser } from '../../interfaces/req-update-user.interface'
 
 type AccountProfileProps = {
   className?: any
   user: User
+  onUpdateUser: (user: ReqUpdateUser) => any
 }
 
 export const AccountProfile = (props: AccountProfileProps) => {
-  const { className, user: authUser, ...rest } = props
+  const { className, user: authUser, onUpdateUser, ...rest } = props
   console.log('Dante: AccountProfile -> authUser', authUser)
 
   const classes = useStyles()
@@ -35,6 +37,8 @@ export const AccountProfile = (props: AccountProfileProps) => {
     avatar: 'https://www.w3schools.com/howto/img_avatar.png',
     ...authUser,
   }
+
+  const onUpdateAvatar = async (avatarUrl: string) => onUpdateUser({ avatar: avatarUrl })
 
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -60,7 +64,7 @@ export const AccountProfile = (props: AccountProfileProps) => {
       </CardContent>
       <Divider />
       <CardActions>
-        <ChangeAvatar>
+        <ChangeAvatar onUpdateAvatar={onUpdateAvatar}>
           <Button
             component="span"
             className={classes.uploadButton}

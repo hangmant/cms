@@ -91,8 +91,15 @@ export const UPDATE_ME_MUTATION = gql`
   mutation updateMe($data: UserUpdateInput!) {
     updateMe(data: $data) {
       _id
-      name
+      username
+      firstName
+      lastName
+      phone
+      address
+      country
       email
+      avatar
+      __typename
     }
   }
 `
@@ -108,6 +115,7 @@ export const CREATE_USER_MUTATION = gql`
       address
       country
       email
+      avatar
       __typename
     }
   }

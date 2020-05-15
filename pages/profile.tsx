@@ -7,6 +7,7 @@ import { AccountProfile } from '../components/Account/AccountProfile'
 import { withAuthentication } from '../hoc/Authenticate'
 import { User } from '../interfaces/user.interface'
 import { UPDATE_ME_MUTATION } from '../apollo/mutations'
+import { ReqUpdateUser } from '../interfaces/req-update-user.interface'
 
 const Profile = props => {
   const { data } = useQuery(ME)
@@ -15,7 +16,8 @@ const Profile = props => {
 
   const user: User = data?.me ?? {}
 
-  const handleUpdateMe = async user => {
+  const handleUpdateMe = async (user: ReqUpdateUser) => {
+    console.log('Dante: handleUpdateMe -> user', user)
     try {
       setLoadingUpdateUser(true)
       await updateMeMutation({
@@ -33,7 +35,7 @@ const Profile = props => {
   return (
     <Grid container spacing={4}>
       <Grid item lg={4} md={6} xl={4} xs={12}>
-        <AccountProfile user={user} />
+        <AccountProfile user={user} onUpdateUser={handleUpdateMe} />
       </Grid>
       <Grid item lg={8} md={6} xl={8} xs={12}>
         <AccountDetails
