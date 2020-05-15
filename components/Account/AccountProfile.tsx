@@ -29,12 +29,11 @@ export const AccountProfile = (props: AccountProfileProps) => {
 
   const classes = useStyles()
 
-  const user = {
-    name: 'Shen Zhi',
-    city: 'Los Angeles',
-    country: 'USA',
-    timezone: 'GTM-7',
-    avatar: 'https://www.w3schools.com/howto/img_avatar.png',
+  const user: User = {
+    firstName: 'Shen Zhi',
+    lastName: 'Los Angeles',
+    address: 'USA',
+    avatar: 'https://aigenda.com/Content/img/empty-user-photo.png',
     ...authUser,
   }
 
@@ -46,14 +45,14 @@ export const AccountProfile = (props: AccountProfileProps) => {
         <div className={classes.details}>
           <div>
             <Typography gutterBottom variant="h2">
-              {user.name}
+              {user.firstName} {user.lastName}
             </Typography>
             <Typography color="textSecondary" variant="body1">
-              {user.city}, {user.country}
+              {user.address}, {user.country}
             </Typography>
-            <Typography color="textSecondary" variant="body1">
-              {moment().format('hh:mm A')} ({user.timezone})
-            </Typography>
+            {/* <Typography color="textSecondary" variant="body1">
+              {moment().format('hh:mm A')} ({user.timezone}) 
+            </Typography> */}
           </div>
           <Avatar className={classes.avatar} src={user.avatar} />
         </div>
@@ -87,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   avatar: {
     marginLeft: 'auto',
-    height: 110,
+    height: 100,
     width: 100,
     flexShrink: 0,
     flexGrow: 0,

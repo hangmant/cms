@@ -68,6 +68,7 @@ export const ME = gql`
       address
       country
       email
+      avatar
       __typename
     }
   }

@@ -1,18 +1,17 @@
-import React, { useState } from 'react'
-import clsx from 'clsx'
-import { makeStyles } from '@material-ui/styles'
 import {
   Card,
-  CardHeader,
-  CardContent,
   CardActions,
+  CardContent,
+  CardHeader,
   Divider,
   Grid,
-  Button,
   TextField,
 } from '@material-ui/core'
-import { User } from '../../interfaces/user.interface'
+import { makeStyles } from '@material-ui/styles'
+import clsx from 'clsx'
 import { Formik } from 'formik'
+import React from 'react'
+import { User } from '../../interfaces/user.interface'
 import ButtonLoader from '../ButtonLoader'
 
 type AccountDetailsProps = {
@@ -37,7 +36,6 @@ export const AccountDetails = (props: AccountDetailsProps) => {
     phone: ' ',
     ...props.user,
   }
-  console.log('Dante: AccountDetails -> user', user)
 
   const states = [
     {
@@ -55,6 +53,8 @@ export const AccountDetails = (props: AccountDetailsProps) => {
   ]
 
   const handleSubmit = values => {
+    delete values._id
+    delete values.__typename
     onUpdateUser(values)
   }
 
@@ -99,7 +99,6 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                       name="email"
                       disabled
                       onChange={handleChange}
-                      required
                       value={values.email}
                       variant="outlined"
                     />
@@ -121,7 +120,6 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                       label="Address"
                       name="address"
                       onChange={handleChange}
-                      required
                       select
                       SelectProps={{ native: true }}
                       value={values.address}
@@ -140,7 +138,6 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                       label="Address"
                       name="address"
                       onChange={handleChange}
-                      required
                       value={values.address}
                       variant="outlined"
                     />

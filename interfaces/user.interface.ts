@@ -6,5 +6,6 @@ export interface User {
   phone?: string
   address?: string
   country?: string
+  avatar?: string
   email: string
 }
