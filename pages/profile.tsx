@@ -9,7 +9,7 @@ import { User } from '../interfaces/user.interface'
 import { UPDATE_ME_MUTATION } from '../apollo/mutations'
 import { ReqUpdateUser } from '../interfaces/req-update-user.interface'
 
-const Profile = props => {
+const Profile = () => {
   const { data } = useQuery(ME)
   const [updateMeMutation] = useMutation(UPDATE_ME_MUTATION)
   const [loadingUpdateUser, setLoadingUpdateUser] = useState(false)
@@ -17,7 +17,6 @@ const Profile = props => {
   const user: User = data?.me ?? {}
 
   const handleUpdateMe = async (user: ReqUpdateUser) => {
-    console.log('Dante: handleUpdateMe -> user', user)
     try {
       setLoadingUpdateUser(true)
       await updateMeMutation({

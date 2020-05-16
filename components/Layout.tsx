@@ -9,10 +9,20 @@ import clsx from 'clsx'
 import React from 'react'
 import { GlobalContextProvider } from '../contexts/globalContext'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import { User } from '../interfaces/user.interface'
 import { Sidebar } from './Sidebar'
 import { SIDEBAR_WIDTH } from './Sidebar/sidebar.constants'
 
-export default function PersistentDrawerLeft({ children }) {
+type PersistentDrawerLeftProps = {
+  children: any
+  user: User
+}
+
+export default function PersistentDrawerLeft({
+  children,
+  user,
+  ...props
+}: PersistentDrawerLeftProps) {
   const [open, setOpen] = useLocalStorage('sidebar_open', true)
   const classes = useStyles({
     open,
@@ -46,7 +56,7 @@ export default function PersistentDrawerLeft({ children }) {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Sidebar open={open} onClose={handleDrawerClose} />
+        <Sidebar user={user} open={open} onClose={handleDrawerClose} />
         <main className={clsx(classes.content)}>
           <div className={classes.drawerHeader} />
           {children}

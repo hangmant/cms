@@ -1,10 +1,8 @@
-import { window } from 'browser-monads'
-import Router, { useRouter } from 'next/router'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext } from 'react'
+import { redirect } from '../apis/auth.utils'
+import { getJwt, isAuthenticated } from '../apis/auth/auth'
 import Layout from '../components/Layout'
 import { User } from '../interfaces/user.interface'
-import { isAuthenticated, getJwt } from '../apis/auth/auth'
-import { redirect } from '../apis/auth.utils'
 
 type AuthUserInfo = boolean
 
@@ -35,7 +33,7 @@ export function withAuthentication(Child: React.ElementRef<any>) {
     render() {
       return (
         <AuthContext.Provider value={(this.props as any).user}>
-          <Layout>
+          <Layout user={(this.props as any).user}>
             <Child {...this.props} user={(this.props as any).user} />
           </Layout>
         </AuthContext.Provider>

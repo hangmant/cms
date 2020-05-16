@@ -4,26 +4,25 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
 import Separator from '../../shared/Separator'
+import { User } from '../../../interfaces/user.interface'
 
-// TODO: define properties
-export const Profile = props => {
-  const { className, ...rest } = props
+type ProfileProps = {
+  className?: string
+  user: User
+}
+
+export const Profile = (props: ProfileProps) => {
+  const { className, user, ...rest } = props
 
   const classes = useStyles()
-
-  const user = {
-    name: 'Shen Zhi',
-    avatar: 'https://www.w3schools.com/howto/img_avatar.png',
-    bio: 'Brain Director',
-  }
 
   return (
     <div {...rest} className={clsx(classes.root, className)}>
       <Avatar alt="Person" className={classes.avatar} src={user.avatar} />
       <Typography className={classes.name} variant="h4">
-        {user.name}
+        {user.firstName}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
+      <Typography variant="body2">{user.lastName}</Typography>
       <Separator v={2} />
       <Link href={'/profile'} passHref>
         <Button

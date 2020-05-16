@@ -25,7 +25,6 @@ type AccountProfileProps = {
 
 export const AccountProfile = (props: AccountProfileProps) => {
   const { className, user: authUser, onUpdateUser, ...rest } = props
-  console.log('Dante: AccountProfile -> authUser', authUser)
 
   const classes = useStyles()
 
