@@ -7,11 +7,16 @@ import {
   Grid,
   TextField,
 } from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { Formik } from 'formik'
 import React from 'react'
+import { useGetCountries } from '../../apollo/hooks/useGetCountries.hook'
+import { Country } from '../../interfaces/country.interface'
 import { User } from '../../interfaces/user.interface'
+import { countryCodeToFlag } from '../../utils/emojis.utils'
+import { sanitizeMutation } from '../../utils/objects.utils'
 import ButtonLoader from '../ButtonLoader'
 
 type AccountDetailsProps = {
@@ -25,37 +30,24 @@ export const AccountDetails = (props: AccountDetailsProps) => {
   const { className, onUpdateUser, loadingUpdateUser, ...rest } = props
 
   const classes = useStyles()
+  const { countries, loading } = useGetCountries()
 
   const user: User = {
     username: ' ',
     firstName: ' ',
     lastName: ' ',
     address: ' ',
-    country: ' ',
+    country: {
+      name: ' ',
+      alpha2Code: ' ',
+    },
     email: ' ',
     phone: ' ',
     ...props.user,
   }
 
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama',
-    },
-    {
-      value: 'new-york',
-      label: 'New York',
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco',
-    },
-  ]
-
   const handleSubmit = values => {
-    delete values._id
-    delete values.__typename
-    onUpdateUser(values)
+    onUpdateUser(sanitizeMutation(values, ['_id']))
   }
 
   return (
@@ -115,22 +107,36 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                     />
                   </Grid>
                   <Grid item md={6} xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Address"
-                      name="address"
-                      onChange={handleChange}
-                      select
-                      SelectProps={{ native: true }}
-                      value={values.address}
-                      variant="outlined"
-                    >
-                      {states.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </TextField>
+                    <Autocomplete
+                      id="country-select-demo"
+                      options={countries}
+                      autoHighlight
+                      value={values.country}
+                      onChange={(_, value) => {
+                        setFieldValue('country', value)
+                      }}
+                      loading={loading}
+                      getOptionLabel={(country: Country) => country.name}
+                      renderOption={(country: Country) => (
+                        <React.Fragment>
+                          <span>{countryCodeToFlag(country.alpha2Code)}</span>
+                          {country.name} ({country.alpha2Code}) {/* +{country.alpha2Code} */}
+                        </React.Fragment>
+                      )}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          label="Country"
+                          name="country"
+                          variant="outlined"
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password',
+                          }}
+                        />
+                      )}
+                    />
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <TextField

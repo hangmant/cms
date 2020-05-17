@@ -96,7 +96,11 @@ export const UPDATE_ME_MUTATION = gql`
       lastName
       phone
       address
-      country
+      country {
+        name
+        flag
+        alpha2Code
+      }
       email
       avatar
       __typename
@@ -113,7 +117,11 @@ export const CREATE_USER_MUTATION = gql`
       lastName
       phone
       address
-      country
+      country {
+        name
+        flag
+        alpha2Code
+      }
       email
       avatar
       __typename

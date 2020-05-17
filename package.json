@@ -38,6 +38,7 @@
     "next-with-apollo": "^5.0.1",
     "notistack": "^0.9.11",
     "nprogress": "^0.2.0",
+    "omit-deep-lodash": "^1.1.4",
     "prop-types": "latest",
     "react": "latest",
     "react-addons-test-utils": "^15.6.2",

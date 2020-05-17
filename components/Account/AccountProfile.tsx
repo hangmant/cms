@@ -47,7 +47,7 @@ export const AccountProfile = (props: AccountProfileProps) => {
               {user.firstName} {user.lastName}
             </Typography>
             <Typography color="textSecondary" variant="body1">
-              {user.address}, {user.country}
+              {user.address}, {user?.country?.name}
             </Typography>
           </div>
           <Avatar className={classes.avatar} src={user.avatar} />

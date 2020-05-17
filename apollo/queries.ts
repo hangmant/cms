@@ -66,10 +66,24 @@ export const ME = gql`
       lastName
       phone
       address
-      country
+      country {
+        name
+        flag
+        alpha2Code
+      }
       email
       avatar
       __typename
+    }
+  }
+`
+
+export const GET_COUNTRIES = gql`
+  query countries {
+    countries {
+      name
+      flag
+      alpha2Code
     }
   }
 `
