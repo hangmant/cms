@@ -1,4 +1,4 @@
-# Hangman CMS
+# Hanwoman CMS
 
 
 ### Install it and run:
