@@ -22,7 +22,7 @@ export const verifyEmail = async (token: string) => {
     }
 
     return {
-      status: statusCodeToStatusMessage(body.statusCode),
+      status: statusCodeToStatusMessage(response.status),
       message: body.message,
     }
   } catch {

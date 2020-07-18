@@ -14,7 +14,8 @@ function VerifyEmail({ result }) {
         <p
           className={clsx(
             error === 'sucess' && classes.correctMessage,
-            error === 'error' && classes.errorMessage
+            error === 'error' && classes.errorMessage,
+            error === 'warning' && classes.warningMessage
           )}
         >
           {result.message}
@@ -46,7 +47,10 @@ const useStyles = makeStyles(theme => ({
     color: 'green',
   },
   errorMessage: {
-    color: 'red !important',
+    color: 'red',
+  },
+  warningMessage: {
+    color: 'orange',
   },
 }))
 
