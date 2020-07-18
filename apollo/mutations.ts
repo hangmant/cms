@@ -128,3 +128,11 @@ export const CREATE_USER_MUTATION = gql`
     }
   }
 `
+
+export const VERIFY_EMAIL_MUTATION = gql`
+  mutation verifyEmail($data: EmailVerifyInput!) {
+    verifyEmail(data: $data) {
+      message
+    }
+  }
+`
