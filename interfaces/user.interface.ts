@@ -8,6 +8,7 @@ export interface User {
   phone?: string
   address?: string
   country?: Country
+  isEmailVerified?: boolean
   avatar?: string
   email: string
 }

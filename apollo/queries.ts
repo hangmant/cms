@@ -72,6 +72,7 @@ export const ME = gql`
         alpha2Code
       }
       email
+      isEmailVerified
       avatar
       __typename
     }

@@ -11,7 +11,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
 import { Formik } from 'formik'
-import React from 'react'
+import React, { useState } from 'react'
 import { useGetCountries } from '../../apollo/hooks/useGetCountries.hook'
 import { Country } from '../../interfaces/country.interface'
 import { User } from '../../interfaces/user.interface'
@@ -28,6 +28,8 @@ type AccountDetailsProps = {
 
 export const AccountDetails = (props: AccountDetailsProps) => {
   const { className, onUpdateUser, loadingUpdateUser, ...rest } = props
+
+  const [isEmailVerificationSeded, setIsEmailVerificationSended] = useState(false)
 
   const classes = useStyles()
   const { countries, loading } = useGetCountries()
@@ -94,6 +96,12 @@ export const AccountDetails = (props: AccountDetailsProps) => {
                       value={values.email}
                       variant="outlined"
                     />
+                    {!user.isEmailVerified && (
+                      <p style={{ color: 'red' }}>
+                        Your email isn't verified, {/* TODO: Send email verification again */}
+                        <a href="https://google.colm">send email verification again</a>
+                      </p>
+                    )}
                   </Grid>
                   <Grid item md={6} xs={12}>
                     <TextField
