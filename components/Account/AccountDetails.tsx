@@ -45,6 +45,7 @@ export const AccountDetails = (props: AccountDetailsProps) => {
     },
     email: ' ',
     phone: ' ',
+    isEmailVerified: true,
     ...props.user,
   }
 
