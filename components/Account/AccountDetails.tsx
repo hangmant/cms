@@ -50,7 +50,7 @@ export const AccountDetails = (props: AccountDetailsProps) => {
   }
 
   const handleSubmit = values => {
-    onUpdateUser(sanitizeMutation(values, ['_id']))
+    onUpdateUser(sanitizeMutation(values, ['_id', 'isEmailVerified']))
   }
 
   return (

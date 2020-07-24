@@ -18,7 +18,7 @@ export const CREATE_WORD_MUTATION = gql`
 `
 
 export const UPDATE_WORD_MUTATION = gql`
-  mutation updateWord($_id: GraphQLObjectId!, $data: WordUpdateInput!) {
+  mutation updateWord($_id: ID!, $data: WordUpdateInput!) {
     updateWord(_id: $_id, data: $data) {
       _id
       name
@@ -35,7 +35,7 @@ export const UPDATE_WORD_MUTATION = gql`
 `
 
 export const DELETE_WORD_MUTATION = gql`
-  mutation deleteWord($_id: GraphQLObjectId!) {
+  mutation deleteWord($_id: ID!) {
     deleteWord(_id: $_id) {
       _id
       name
@@ -64,7 +64,7 @@ export const CREATE_CATEGORY_MUTATION = gql`
 `
 
 export const UPDATE_CATEGORY_MUTATION = gql`
-  mutation updateCategory($_id: GraphQLObjectId!, $data: CategoryUpdateInput!) {
+  mutation updateCategory($_id: ID!, $data: CategoryUpdateInput!) {
     updateCategory(_id: $_id, data: $data) {
       _id
       name
@@ -76,7 +76,7 @@ export const UPDATE_CATEGORY_MUTATION = gql`
 `
 
 export const DELETE_CATEGORY_MUTATION = gql`
-  mutation deleteCategory($_id: GraphQLObjectId!) {
+  mutation deleteCategory($_id: ID!) {
     deleteCategory(_id: $_id) {
       _id
       name
