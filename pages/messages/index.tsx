@@ -1,9 +1,12 @@
 import { Grid, List, CardHeader, CardContent, Typography, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ChatUserList } from '../../components/Messages/ChatUserList'
 import { withAuthentication } from '../../hoc/Authenticate'
-import ChatMessageGrouped from '../../components/Messages/ChatMessageGrouped'
+import { ChatMessage } from '../../components/Messages/ChatMessage'
+import { useSubscription } from '@apollo/react-hooks'
+import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
+import { Message } from '../../interfaces/chat/message.interface'
 
 const users: any[] = [
   {
@@ -23,43 +26,36 @@ const users: any[] = [
   },
 ]
 
-const messagesGrouped = [
+const initialMessages: Message[] = [
   {
     _id: 'lkasdjflkja',
-    userId: 'iosadfasdlfk',
-    userName: 'Tommy Shelby',
-    avatar:
-      'https://demo.uifort.com/carolina-react-admin-dashboard-pro-demo/static/media/people-2.8bb1c1e5.jpg',
-    messages: [
-      {
-        _id: 'lkajsdlfka',
-        body: 'Hola Dante como estas?',
-        date: 'alskd',
-      },
-      {
-        _id: 'lkajsdlfka',
-        body: 'Queria confirmarte que llegare tarde a la reunion',
-        date: 'alskd',
-      },
-    ],
+    fromUser: 'iosadfasdlfk',
+    text: 'laksdjf',
+    html: 'asdlfkj',
+    roomId: 'alksdfj',
   },
   {
     _id: 'lkasdjflkja',
-    userId: 'iosadfc90asdlfk',
-    userName: 'Dante Calderon',
-    avatar: 'https://hangwoman-images.s3.amazonaws.com/2020-07-25T07-25-38-336Zavatar.png',
-    messages: [
-      {
-        _id: 'lkajsdlfka',
-        body: 'Mira que coincidencia, yo tambien',
-        date: 'alskd',
-      },
-    ],
+    fromUser: 'iosadfasdlfk',
+    text: 'laksdjf',
+    html: 'Hola Nuevamente',
+    roomId: 'alksdfj',
   },
 ]
 
 function Words() {
   const classes = useStyles()
+
+  const { data, loading } = useSubscription(MESSAGE_SUBSCRIPTION)
+
+  const [messages, setMessages] = useState(initialMessages)
+
+  useEffect(() => {
+    if (data?.messageCreated) {
+      console.log('New message', data?.messageCreated)
+      setMessages([...messages, data.messageCreated])
+    }
+  }, [data])
 
   return (
     <div className={classes.root}>
@@ -80,8 +76,8 @@ function Words() {
               }}
               className="messages-here"
             >
-              {messagesGrouped.map(messageGrouped => (
-                <ChatMessageGrouped messageGrouped={messageGrouped} />
+              {messages.map(message => (
+                <ChatMessage message={message} />
               ))}
             </div>
             <TextField

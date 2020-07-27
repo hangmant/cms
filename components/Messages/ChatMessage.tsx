@@ -1,14 +1,34 @@
+import { Avatar, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
+import { Message } from '../../interfaces/chat/message.interface'
 
 type ChatMessageProps = {
-  message: {
-    body: string
-    date: string
-  }
+  message: Message
 }
 
-function ChatMessage(props: ChatMessageProps) {
-  return <div>{props.message.body}</div>
+export function ChatMessage({ message }: ChatMessageProps) {
+  const classes = useStyles()
+
+  return (
+    <div className={classes.container}>
+      <div>
+        <Avatar variant="rounded" src="" />
+      </div>
+      <div className={classes.body}>
+        <div>
+          <Typography>{message.fromUser}</Typography>
+        </div>
+        <div>{message.text}</div>
+      </div>
+    </div>
+  )
 }
 
-export default ChatMessage
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+  },
+  body: {
+    paddingLeft: 10,
+  },
+}))
