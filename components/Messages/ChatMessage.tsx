@@ -18,7 +18,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         <div>
           <Typography>{message.fromUser.firstName}</Typography>
         </div>
-        <div>{message.text}</div>
+        <div dangerouslySetInnerHTML={{ __html: message.html }}></div>
       </div>
     </ListItem>
   )

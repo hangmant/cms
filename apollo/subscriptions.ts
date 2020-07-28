@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const MESSAGE_SUBSCRIPTION = gql`
-  subscription {
-    messageCreated {
+  subscription($roomId: String!) {
+    messageCreated(roomId: $roomId) {
       _id
       text
       html

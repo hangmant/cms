@@ -44,6 +44,9 @@ function Words() {
   useEffect(() => {
     subscribeToMore({
       document: MESSAGE_SUBSCRIPTION,
+      variables: {
+        roomId: '5f1de88ce74c21752cd96be2',
+      },
       updateQuery: (previousData, { subscriptionData }) => {
         const newMessages = [...previousData.messages, subscriptionData.data.messageCreated]
 
@@ -74,7 +77,7 @@ function Words() {
         <Grid item xs={4}>
           <List>
             {users.map(user => (
-              <ChatUserList user={user} />
+              <ChatUserList key={user._id} user={user} />
             ))}
           </List>
         </Grid>
@@ -89,7 +92,7 @@ function Words() {
               className="messages-here"
             >
               {messages.map(message => (
-                <ChatMessage message={message} />
+                <ChatMessage key={message._id} message={message} />
               ))}
             </List>
             <TextField
