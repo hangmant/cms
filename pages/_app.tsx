@@ -3,9 +3,12 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
+import { split } from 'apollo-link'
 import { setContext } from 'apollo-link-context'
 import { onError } from 'apollo-link-error'
 import { HttpLink } from 'apollo-link-http'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 import get from 'lodash/get'
 import withApollo from 'next-with-apollo'
 import App from 'next/app'
@@ -16,6 +19,7 @@ import { redirect } from '../apis/auth.utils'
 import { getCookie } from '../apis/session'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
+import { HttpStatus } from '../enums/http-status.enum'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -69,6 +73,38 @@ const authLink = setContext(({ context = {} }, { headers }) => {
   }
 })
 
+// https://github.com/apollographql/subscriptions-transport-ws/issues/333#issuecomment-359261024
+
+const httpLink = new HttpLink({
+  uri: 'http://localhost:8087/graphql',
+})
+
+const wsLink = process.browser
+  ? new WebSocketLink({
+      uri: 'ws://localhost:8087/graphql',
+      options: {
+        reconnect: true,
+        connectionParams: {
+          authorization: `Bearer ${getCookie('jwt')}`,
+        },
+      },
+    })
+  : null
+
+const link = process.browser
+  ? split(
+      ({ query }) => {
+        const definition = getMainDefinition(query)
+
+        return (
+          definition.kind === 'OperationDefinition' && definition.operation === 'subscription'
+        )
+      },
+      wsLink,
+      httpLink
+    )
+  : httpLink
+
 export default withApollo(({ initialState, ctx = {} }) => {
   return new ApolloClient({
     link: authLink
@@ -84,7 +120,7 @@ export default withApollo(({ initialState, ctx = {} }) => {
             /** redirect  */
             if (process.browser) {
               const status = get(response, 'errors[0].extensions.exception.status')
-              if ([401].includes(status)) {
+              if (status === HttpStatus.UNAUTHORIZED) {
                 console.error('Redirecting to login')
                 redirect(ctx, '/login')
               }
@@ -95,11 +131,7 @@ export default withApollo(({ initialState, ctx = {} }) => {
           }
         })
       )
-      .concat(
-        new HttpLink({
-          uri: 'http://localhost:8087/graphql',
-        })
-      ),
+      .concat(link),
     cache: new InMemoryCache().restore(initialState || {}),
   })
 })(MyApp)

@@ -1,5 +1,6 @@
 import CategoryIcon from '@material-ui/icons/Category'
 import FontDownloadIcon from '@material-ui/icons/FontDownload'
+import ChatIcon from '@material-ui/icons/Chat'
 
 export type SidebarItem = {
   title: string
@@ -17,6 +18,11 @@ export const SIDEBAR_ITEMS: SidebarItem[] = [
     title: 'Categories',
     to: '/categories',
     icon: CategoryIcon,
+  },
+  {
+    title: 'Messages',
+    to: '/messages',
+    icon: ChatIcon,
   },
 ]
 

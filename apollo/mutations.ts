@@ -136,3 +136,23 @@ export const VERIFY_EMAIL_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_MESSAGE_MUTATION = gql`
+  mutation createMessage($data: MessageCreateInput!) {
+    createMessage(data: $data) {
+      _id
+      text
+      html
+      fromUser {
+        _id
+        firstName
+        lastName
+        avatar
+        email
+        __typename
+      }
+      roomId
+      __typename
+    }
+  }
+`

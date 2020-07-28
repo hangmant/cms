@@ -1,12 +1,11 @@
 {
-  "name": "nextjs",
-  "version": "4.0.0",
-  "private": true,
+  "name": "hangwoman-cms",
+  "version": "0.0.1",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "test": "ava",
+    "start": "next start -p $PORT",
+    "test": "echo 1;",
     "test:jest": "jest",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
@@ -23,6 +22,8 @@
     "apollo-link-context": "^1.0.20",
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
+    "apollo-link-ws": "^1.0.20",
+    "apollo-utilities": "^1.3.4",
     "axios": "^0.19.2",
     "browser-monads": "^1.0.0",
     "clsx": "latest",
@@ -47,6 +48,7 @@
     "react-dom": "latest",
     "sinon": "^9.0.2",
     "styled-components": "^5.1.0",
+    "subscriptions-transport-ws": "^0.9.17",
     "velocity-react": "^1.4.3",
     "yup": "^0.28.1"
   },
