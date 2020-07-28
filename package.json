@@ -1,12 +1,11 @@
 {
-  "name": "nextjs",
-  "version": "4.0.0",
-  "private": true,
+  "name": "hangwoman-cms",
+  "version": "0.0.1",
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "test": "ava",
+    "start": "next start -p $PORT",
+    "test": "echo 1;",
     "test:jest": "jest",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
   },
