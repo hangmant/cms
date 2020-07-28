@@ -83,6 +83,9 @@ const wsLink = process.browser
       uri: 'ws://localhost:8087/graphql',
       options: {
         reconnect: true,
+        connectionParams: {
+          authorization: `Bearer ${getCookie('jwt')}`,
+        },
       },
     })
   : null
