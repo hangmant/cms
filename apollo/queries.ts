@@ -95,8 +95,15 @@ export const GET_MESSAGES = gql`
       _id
       text
       html
-      fromUser
-      roomId
+      fromUser {
+        _id
+        firstName
+        lastName
+        avatar
+        email
+        __typename
+      }
+      __typename
     }
   }
 `

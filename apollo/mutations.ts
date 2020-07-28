@@ -143,8 +143,16 @@ export const CREATE_MESSAGE_MUTATION = gql`
       _id
       text
       html
-      fromUser
+      fromUser {
+        _id
+        firstName
+        lastName
+        avatar
+        email
+        __typename
+      }
       roomId
+      __typename
     }
   }
 `

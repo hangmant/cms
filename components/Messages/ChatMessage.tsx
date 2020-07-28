@@ -12,11 +12,11 @@ export function ChatMessage({ message }: ChatMessageProps) {
   return (
     <ListItem className={classes.container}>
       <div>
-        <Avatar variant="rounded" src="" />
+        <Avatar variant="rounded" src={message.fromUser.avatar} />
       </div>
       <div className={classes.body}>
         <div>
-          <Typography>{message.fromUser}</Typography>
+          <Typography>{message.fromUser.firstName}</Typography>
         </div>
         <div>{message.text}</div>
       </div>
