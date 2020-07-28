@@ -16,7 +16,6 @@ type ChatUserListProps = {
 
 export function ChatUserList({ user }: ChatUserListProps) {
   const classes = useStyles({ isActive: user.isActive })
-  console.log('Dante: ChatUserList -> user.isActive ', user.isActive)
   return (
     <ListItem divider button>
       <ListItemAvatar className={classes.avatarSmall}>

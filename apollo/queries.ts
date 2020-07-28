@@ -88,3 +88,15 @@ export const GET_COUNTRIES = gql`
     }
   }
 `
+
+export const GET_MESSAGES = gql`
+  query getMessages($roomId: ID!) {
+    messages(roomId: $roomId) {
+      _id
+      text
+      html
+      fromUser
+      roomId
+    }
+  }
+`

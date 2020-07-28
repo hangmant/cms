@@ -19,6 +19,7 @@ import { redirect } from '../apis/auth.utils'
 import { getCookie } from '../apis/session'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
+import { HttpStatus } from '../enums/http-status.enum'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -119,7 +120,7 @@ export default withApollo(({ initialState, ctx = {} }) => {
             /** redirect  */
             if (process.browser) {
               const status = get(response, 'errors[0].extensions.exception.status')
-              if ([401].includes(status)) {
+              if (status === HttpStatus.UNAUTHORIZED) {
                 console.error('Redirecting to login')
                 redirect(ctx, '/login')
               }

@@ -1,12 +1,13 @@
-import { Grid, List, CardHeader, CardContent, Typography, TextField } from '@material-ui/core'
+import { useQuery } from '@apollo/react-hooks'
+import { CardHeader, Grid, List, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import { get } from 'lodash'
+import React, { Component, useEffect } from 'react'
+import { GET_MESSAGES } from '../../apollo/queries'
+import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
+import { ChatMessage } from '../../components/Messages/ChatMessage'
 import { ChatUserList } from '../../components/Messages/ChatUserList'
 import { withAuthentication } from '../../hoc/Authenticate'
-import { ChatMessage } from '../../components/Messages/ChatMessage'
-import { useSubscription } from '@apollo/react-hooks'
-import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
-import { Message } from '../../interfaces/chat/message.interface'
 
 const users: any[] = [
   {
@@ -26,36 +27,29 @@ const users: any[] = [
   },
 ]
 
-const initialMessages: Message[] = [
-  {
-    _id: 'lkasdjflkja',
-    fromUser: 'iosadfasdlfk',
-    text: 'laksdjf',
-    html: 'asdlfkj',
-    roomId: 'alksdfj',
-  },
-  {
-    _id: 'lkasdjflkja',
-    fromUser: 'iosadfasdlfk',
-    text: 'laksdjf',
-    html: 'Hola Nuevamente',
-    roomId: 'alksdfj',
-  },
-]
-
 function Words() {
   const classes = useStyles()
 
-  const { data, loading } = useSubscription(MESSAGE_SUBSCRIPTION)
-
-  const [messages, setMessages] = useState(initialMessages)
+  const { data, subscribeToMore } = useQuery(GET_MESSAGES, {
+    variables: {
+      roomId: '5f1de88ce74c21752cd96be2',
+    },
+  })
 
   useEffect(() => {
-    if (data?.messageCreated) {
-      console.log('New message', data?.messageCreated)
-      setMessages([...messages, data.messageCreated])
-    }
-  }, [data])
+    subscribeToMore({
+      document: MESSAGE_SUBSCRIPTION,
+      updateQuery: (previousData, { subscriptionData }) => {
+        const newMessages = [...previousData.messages, subscriptionData.data.messageCreated]
+
+        return {
+          messages: newMessages,
+        }
+      },
+    })
+  }, [])
+
+  const messages = get(data, 'messages', [])
 
   return (
     <div className={classes.root}>
@@ -70,16 +64,17 @@ function Words() {
         <Grid item xs={8}>
           <div>
             <CardHeader title="MESSAGE" subheader="Message to Dante Calderon" />
-            <div
+            <List
               style={{
                 height: 550,
+                overflowY: 'scroll',
               }}
               className="messages-here"
             >
               {messages.map(message => (
                 <ChatMessage message={message} />
               ))}
-            </div>
+            </List>
             <TextField
               placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
               rowsMax={5}

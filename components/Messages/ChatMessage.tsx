@@ -1,4 +1,4 @@
-import { Avatar, makeStyles, Typography } from '@material-ui/core'
+import { Avatar, ListItem, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import { Message } from '../../interfaces/chat/message.interface'
 
@@ -10,7 +10,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const classes = useStyles()
 
   return (
-    <div className={classes.container}>
+    <ListItem className={classes.container}>
       <div>
         <Avatar variant="rounded" src="" />
       </div>
@@ -20,7 +20,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         </div>
         <div>{message.text}</div>
       </div>
-    </div>
+    </ListItem>
   )
 }
 
