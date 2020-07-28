@@ -1,13 +1,14 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import { CardHeader, Grid, List, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { get } from 'lodash'
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import { GET_MESSAGES } from '../../apollo/queries'
 import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
 import { ChatMessage } from '../../components/Messages/ChatMessage'
 import { ChatUserList } from '../../components/Messages/ChatUserList'
 import { withAuthentication } from '../../hoc/Authenticate'
+import { CREATE_MESSAGE_MUTATION } from '../../apollo/mutations'
 
 const users: any[] = [
   {
@@ -30,6 +31,10 @@ const users: any[] = [
 function Words() {
   const classes = useStyles()
 
+  const [text, setText] = useState('')
+
+  const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION)
+
   const { data, subscribeToMore } = useQuery(GET_MESSAGES, {
     variables: {
       roomId: '5f1de88ce74c21752cd96be2',
@@ -48,6 +53,18 @@ function Words() {
       },
     })
   }, [])
+
+  const handleChangeText = event => {
+    setText(event.target.value)
+  }
+
+  const handleKeyPress = async event => {
+    if (event.key === 'Enter') {
+      event.stopPropagation()
+      await createMessage({ variables: { data: { text, roomId: '5f1de88ce74c21752cd96be2' } } })
+      setText('')
+    }
+  }
 
   const messages = get(data, 'messages', [])
 
@@ -77,9 +94,12 @@ function Words() {
             </List>
             <TextField
               placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
+              value={text}
               rowsMax={5}
+              onKeyPress={handleKeyPress}
+              onChange={handleChangeText}
               fullWidth
-              // multiline
+              multiline
               id="outlined-basic"
               variant="outlined"
             />
