@@ -4,6 +4,7 @@ import fetch from 'isomorphic-fetch'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { setCookie } from '../apis/session'
+import { config } from '../config/config'
 import { ResLoginLocal } from '../interfaces/res-login-local.interface'
 import Separator from './shared/Separator'
 
@@ -21,7 +22,7 @@ export const Login = (props: LoginProps) => {
 
   const onClickLogIn = async () => {
     try {
-      const response = await fetch(`http://localhost:8087/api/auth/login/jwt`, {
+      const response = await fetch(`${config.hangwomanApiREST}/auth/login/jwt`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

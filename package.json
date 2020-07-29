@@ -27,6 +27,7 @@
     "axios": "^0.19.2",
     "browser-monads": "^1.0.0",
     "clsx": "latest",
+    "dotenv": "^8.2.0",
     "formik": "^2.1.4",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",

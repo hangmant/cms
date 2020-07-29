@@ -20,6 +20,7 @@ import { getCookie } from '../apis/session'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
 import { HttpStatus } from '../enums/http-status.enum'
+import { config } from '../config/config'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {
   componentDidMount() {
@@ -76,12 +77,12 @@ const authLink = setContext(({ context = {} }, { headers }) => {
 // https://github.com/apollographql/subscriptions-transport-ws/issues/333#issuecomment-359261024
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:8087/graphql',
+  uri: config.hangwomanApiGQL,
 })
 
 const wsLink = process.browser
   ? new WebSocketLink({
-      uri: 'ws://localhost:8087/graphql',
+      uri: config.hangwomanApiWS,
       options: {
         reconnect: true,
         connectionParams: {

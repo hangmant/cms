@@ -1,10 +1,10 @@
 import fetch from 'isomorphic-fetch'
-import { config } from '../config'
+import { config } from '../../config/config'
 import { statusCodeToStatusMessage } from '../../helpers/status-code-to-status-message.helper'
 
 export const verifyEmail = async (token: string) => {
   try {
-    const response = await fetch(`${config.hangmanApiREST}/email-verification/${token}`, {
+    const response = await fetch(`${config.hangwomanApiREST}/email-verification/${token}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
