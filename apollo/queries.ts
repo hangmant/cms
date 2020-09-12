@@ -107,3 +107,14 @@ export const GET_MESSAGES = gql`
     }
   }
 `
+
+export const GET_MY_ROOMS = gql`
+  query userRooms {
+    userRooms {
+      _id
+      name
+      type
+      __typename
+    }
+  }
+`

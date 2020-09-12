@@ -156,3 +156,26 @@ export const CREATE_MESSAGE_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_ROOM_MUTATION = gql`
+  mutation createRoom($data: RoomCreateInput!) {
+    createRoom(data: $data) {
+      _id
+      name
+      users
+      type
+      __typename
+    }
+  }
+`
+
+export const CREATE_ROOM_USER = gql`
+  mutation createRoomUser($data: RoomUserCreateInput!) {
+    createRoomUser(data: $data) {
+      _id
+      roomId
+      userId
+      __typename
+    }
+  }
+`

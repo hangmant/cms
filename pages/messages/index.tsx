@@ -1,14 +1,17 @@
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import { CardHeader, Grid, List, TextField } from '@material-ui/core'
+import { useMutation, useQuery } from '@apollo/react-hooks'
+import { CardHeader, Grid, List, Typography, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { get } from 'lodash'
-import React, { Component, useEffect, useState } from 'react'
-import { GET_MESSAGES } from '../../apollo/queries'
+import React, { useEffect, useState } from 'react'
+import { CREATE_MESSAGE_MUTATION } from '../../apollo/mutations'
+import { GET_MESSAGES, GET_MY_ROOMS } from '../../apollo/queries'
 import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
 import { ChatMessage } from '../../components/Messages/ChatMessage'
 import { ChatUserList } from '../../components/Messages/ChatUserList'
 import { withAuthentication } from '../../hoc/Authenticate'
-import { CREATE_MESSAGE_MUTATION } from '../../apollo/mutations'
+import { User } from '../../interfaces/user.interface'
+import { ChatRooms } from '../../components/Messages/ChatRooms'
+import { ChatRoomsTitle } from '../../components/Messages/ChatRoomsTitle'
 
 const users: any[] = [
   {
@@ -28,7 +31,7 @@ const users: any[] = [
   },
 ]
 
-function Words() {
+function Messages({ user }: { user: User }) {
   const classes = useStyles()
 
   const [text, setText] = useState('')
@@ -40,6 +43,8 @@ function Words() {
       roomId: '5f1de88ce74c21752cd96be2',
     },
   })
+
+  const { data: roomsData } = useQuery(GET_MY_ROOMS)
 
   useEffect(() => {
     subscribeToMore({
@@ -75,11 +80,8 @@ function Words() {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={4}>
-          <List>
-            {users.map(user => (
-              <ChatUserList key={user._id} user={user} />
-            ))}
-          </List>
+          <ChatRoomsTitle />
+          <ChatRooms rooms={roomsData?.userRooms} />
         </Grid>
         <Grid item xs={8}>
           <div>
@@ -128,4 +130,4 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default withAuthentication(Words)
+export default withAuthentication(Messages)
