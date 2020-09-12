@@ -107,3 +107,25 @@ export const GET_MESSAGES = gql`
     }
   }
 `
+
+export const GET_MY_ROOMS = gql`
+  query userRooms {
+    userRooms {
+      _id
+      name
+      type
+      __typename
+    }
+  }
+`
+
+export const GET_ROOM = gql`
+  query room($_id: ID!) {
+    room(_id: $_id) {
+      _id
+      name
+      type
+      __typename
+    }
+  }
+`
