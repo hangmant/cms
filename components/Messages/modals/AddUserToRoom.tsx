@@ -1,26 +1,24 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
 import {
+  Avatar,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
   makeStyles,
   TextField,
-  ListItem,
-  List,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
-  ListItemSecondaryAction,
 } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import { GET_USERS } from '../../../apollo/queries'
 import { User } from '../../../interfaces/user.interface'
-import { ChevronRight } from '@material-ui/icons'
 
 type CreateRoomProps = {
   children: Function
@@ -28,7 +26,7 @@ type CreateRoomProps = {
 
 export const AddUserToRoomModal = ({ children }: CreateRoomProps) => {
   const classes = useStyles()
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -74,8 +72,8 @@ export const AddUserToRoomModal = ({ children }: CreateRoomProps) => {
             onChange={handleOnChangeTitle}
           />
           <List className={classes.list}>
-            {(dataUsers?.users ?? []).map((user: User) => (
-              <ListItem divider>
+            {(dataUsers?.users ?? []).map((user: User, idx) => (
+              <ListItem divider key={idx}>
                 <ListItemAvatar className={classes.avatarSmall}>
                   <Avatar alt={`Avatar ${user.firstName}`} src={user.avatar} />
                 </ListItemAvatar>
@@ -90,7 +88,7 @@ export const AddUserToRoomModal = ({ children }: CreateRoomProps) => {
           </List>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAddUserToRoom} color="primary" variant="contained">
+          <Button onClick={handleClose} color="primary" variant="contained">
             Done
           </Button>
         </DialogActions>
