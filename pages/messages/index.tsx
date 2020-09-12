@@ -1,80 +1,17 @@
-import { useMutation, useQuery } from '@apollo/react-hooks'
-import { CardHeader, Grid, List, Typography, TextField } from '@material-ui/core'
+import { useQuery } from '@apollo/react-hooks'
+import { Button, Grid, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { get } from 'lodash'
-import React, { useEffect, useState } from 'react'
-import { CREATE_MESSAGE_MUTATION } from '../../apollo/mutations'
-import { GET_MESSAGES, GET_MY_ROOMS } from '../../apollo/queries'
-import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
-import { ChatMessage } from '../../components/Messages/ChatMessage'
-import { ChatUserList } from '../../components/Messages/ChatUserList'
-import { withAuthentication } from '../../hoc/Authenticate'
-import { User } from '../../interfaces/user.interface'
+import React from 'react'
+import { GET_MY_ROOMS } from '../../apollo/queries'
 import { ChatRooms } from '../../components/Messages/ChatRooms'
 import { ChatRoomsTitle } from '../../components/Messages/ChatRoomsTitle'
+import { CreateRoom } from '../../components/modals/CreateRoom'
+import { withAuthentication } from '../../hoc/Authenticate'
 
-const users: any[] = [
-  {
-    _id: 'alsdf',
-    name: 'Dante Calderon',
-    avatar: 'https://hangwoman-images.s3.amazonaws.com/2020-07-25T07-25-38-336Zavatar.png',
-    email: 'dantehemerson@gmail.com',
-    isActive: true,
-  },
-  {
-    _id: '9a0sd',
-    name: 'Freddy JI',
-    avatar:
-      'https://demo.uifort.com/carolina-react-admin-dashboard-pro-demo/static/media/people-2.8bb1c1e5.jpg',
-    email: 'freddy@gmail.com',
-    isActive: false,
-  },
-]
-
-function Messages({ user }: { user: User }) {
+function Messages() {
   const classes = useStyles()
 
-  const [text, setText] = useState('')
-
-  const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION)
-
-  const { data, subscribeToMore } = useQuery(GET_MESSAGES, {
-    variables: {
-      roomId: '5f1de88ce74c21752cd96be2',
-    },
-  })
-
   const { data: roomsData } = useQuery(GET_MY_ROOMS)
-
-  useEffect(() => {
-    subscribeToMore({
-      document: MESSAGE_SUBSCRIPTION,
-      variables: {
-        roomId: '5f1de88ce74c21752cd96be2',
-      },
-      updateQuery: (previousData, { subscriptionData }) => {
-        const newMessages = [...previousData.messages, subscriptionData.data.messageCreated]
-
-        return {
-          messages: newMessages,
-        }
-      },
-    })
-  }, [])
-
-  const handleChangeText = event => {
-    setText(event.target.value)
-  }
-
-  const handleKeyPress = async event => {
-    if (event.key === 'Enter') {
-      event.stopPropagation()
-      await createMessage({ variables: { data: { text, roomId: '5f1de88ce74c21752cd96be2' } } })
-      setText('')
-    }
-  }
-
-  const messages = get(data, 'messages', [])
 
   return (
     <div className={classes.root}>
@@ -85,29 +22,15 @@ function Messages({ user }: { user: User }) {
         </Grid>
         <Grid item xs={8}>
           <div>
-            <CardHeader title="MESSAGE" subheader="Message to Dante Calderon" />
-            <List
-              style={{
-                height: 550,
-                overflowY: 'scroll',
-              }}
-              className="messages-here"
-            >
-              {messages.map(message => (
-                <ChatMessage key={message._id} message={message} />
-              ))}
-            </List>
-            <TextField
-              placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
-              value={text}
-              rowsMax={5}
-              onKeyPress={handleKeyPress}
-              onChange={handleChangeText}
-              fullWidth
-              multiline
-              id="outlined-basic"
-              variant="outlined"
-            />
+            <Typography variant="h5">Select a room</Typography>
+            <Typography>or</Typography>
+            <CreateRoom>
+              {({ handleOpen }) => (
+                <Button onClick={handleOpen} color="primary" variant="contained">
+                  Create One
+                </Button>
+              )}
+            </CreateRoom>
           </div>
         </Grid>
       </Grid>
@@ -118,15 +41,6 @@ function Messages({ user }: { user: User }) {
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-  },
-
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
-  },
-  container: {
-    maxHeight: 800,
   },
 }))
 

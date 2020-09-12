@@ -118,3 +118,14 @@ export const GET_MY_ROOMS = gql`
     }
   }
 `
+
+export const GET_ROOM = gql`
+  query room($_id: ID!) {
+    room(_id: $_id) {
+      _id
+      name
+      type
+      __typename
+    }
+  }
+`
