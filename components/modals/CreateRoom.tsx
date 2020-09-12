@@ -88,6 +88,7 @@ export const CreateRoom = ({ children }: CreateRoomProps) => {
             onChange={handleOnChangeTitle}
             label="Name"
             variant="outlined"
+            autoFocus
             fullWidth
           />
         </DialogContent>
