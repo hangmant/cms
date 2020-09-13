@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import {
   Avatar,
   Button,
@@ -17,14 +17,16 @@ import {
 } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
-import { GET_USERS } from '../../../apollo/queries'
+import { GET_USERS, GET_ROOM_USERS } from '../../../apollo/queries'
 import { User } from '../../../interfaces/user.interface'
+import { CREATE_ROOM_USER_MUTATION } from '../../../apollo/mutations'
 
 type CreateRoomProps = {
   children: Function
+  roomId: string
 }
 
-export const AddUserToRoomModal = ({ children }: CreateRoomProps) => {
+export const AddUserToRoomModal = ({ children, roomId }: CreateRoomProps) => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
@@ -33,14 +35,28 @@ export const AddUserToRoomModal = ({ children }: CreateRoomProps) => {
 
   const [search, setSearch] = useState('')
 
-  const { data: dataUsers, loading } = useQuery(GET_USERS, {
-    variables: {},
+  const { data: dataUsers, loading } = useQuery(GET_USERS)
+  const [addUserToRoom] = useMutation(CREATE_ROOM_USER_MUTATION, {
+    refetchQueries: [
+      {
+        query: GET_ROOM_USERS,
+        variables: {
+          roomId,
+        },
+      },
+    ],
   })
 
-  const handleAddUserToRoom = async () => {
+  const handleAddUserToRoom = async (userId: string) => {
     try {
-      setSearch('')
-      handleClose()
+      await addUserToRoom({
+        variables: {
+          data: {
+            roomId,
+            userId,
+          },
+        },
+      })
     } catch (error) {
       enqueueSnackbar(error.message, {
         variant: 'error',
@@ -79,7 +95,12 @@ export const AddUserToRoomModal = ({ children }: CreateRoomProps) => {
                 </ListItemAvatar>
                 <ListItemText primary={user.firstName} secondary={user.email} />
                 <ListItemSecondaryAction>
-                  <Button variant="outlined" color="secondary" size="small">
+                  <Button
+                    onClick={() => handleAddUserToRoom(user._id)}
+                    variant="outlined"
+                    color="secondary"
+                    size="small"
+                  >
                     Add
                   </Button>
                 </ListItemSecondaryAction>

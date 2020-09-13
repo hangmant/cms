@@ -86,7 +86,7 @@ function Messages() {
               title={dataRoom?.room?.name ?? '...'}
               subheader="Messages"
               action={
-                <AddUserToRoomModal>
+                <AddUserToRoomModal roomId={roomId as string}>
                   {({ handleOpen }) => (
                     <IconButton aria-label="add-user-to-room" onClick={handleOpen}>
                       <PersonAdd />
