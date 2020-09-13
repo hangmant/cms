@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
-import { CREATE_ROOM_MUTATION, CREATE_ROOM_USER } from '../../apollo/mutations'
+import { CREATE_ROOM_MUTATION, CREATE_ROOM_USER_MUTATION } from '../../apollo/mutations'
 import { RoomType } from '../../enums/room-type.enum'
 import { GET_MY_ROOMS } from '../../apollo/queries'
 
@@ -37,7 +37,7 @@ export const CreateRoom = ({ children }: CreateRoomProps) => {
     },
   })
 
-  const [createRoomUser] = useMutation(CREATE_ROOM_USER, {
+  const [createRoomUser] = useMutation(CREATE_ROOM_USER_MUTATION, {
     refetchQueries: [
       {
         query: GET_MY_ROOMS,

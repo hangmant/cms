@@ -129,3 +129,28 @@ export const GET_ROOM = gql`
     }
   }
 `
+
+export const GET_USERS = gql`
+  query users {
+    users {
+      _id
+      email
+      avatar
+      username
+      firstName
+      lastName
+      __typename
+    }
+  }
+`
+
+export const GET_ROOM_USERS = gql`
+  query roomUsers($roomId: ID!) {
+    roomUsers(roomId: $roomId) {
+      _id
+      avatar
+      firstName
+      lastName
+    }
+  }
+`

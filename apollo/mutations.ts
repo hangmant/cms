@@ -169,7 +169,7 @@ export const CREATE_ROOM_MUTATION = gql`
   }
 `
 
-export const CREATE_ROOM_USER = gql`
+export const CREATE_ROOM_USER_MUTATION = gql`
   mutation createRoomUser($data: RoomUserCreateInput!) {
     createRoomUser(data: $data) {
       _id

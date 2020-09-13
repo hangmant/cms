@@ -1,16 +1,19 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { CardHeader, Grid, List, TextField } from '@material-ui/core'
+import { CardHeader, Grid, List, TextField, IconButton, Avatar } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import PersonAdd from '@material-ui/icons/PersonAdd'
 import { get } from 'lodash'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { CREATE_MESSAGE_MUTATION } from '../../apollo/mutations'
-import { GET_MESSAGES, GET_MY_ROOMS, GET_ROOM } from '../../apollo/queries'
+import { GET_MESSAGES, GET_MY_ROOMS, GET_ROOM, GET_ROOM_USERS } from '../../apollo/queries'
 import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
 import { ChatMessage } from '../../components/Messages/ChatMessage'
 import { ChatRooms } from '../../components/Messages/ChatRooms'
 import { ChatRoomsTitle } from '../../components/Messages/ChatRoomsTitle'
 import { withAuthentication } from '../../hoc/Authenticate'
+import { AddUserToRoomModal } from '../../components/Messages/modals/AddUserToRoom'
+import { RoomUsersSidebar } from '../../components/Messages/RoomUsersSidebar'
 
 function Messages() {
   const classes = useStyles()
@@ -27,6 +30,12 @@ function Messages() {
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION)
 
   const { data, subscribeToMore } = useQuery(GET_MESSAGES, {
+    variables: {
+      roomId,
+    },
+  })
+
+  const { data: roomUsersData } = useQuery(GET_ROOM_USERS, {
     variables: {
       roomId,
     },
@@ -75,7 +84,16 @@ function Messages() {
           <div>
             <CardHeader
               title={dataRoom?.room?.name ?? '...'}
-              subheader="Message to Dante Calderon"
+              subheader="Messages"
+              action={
+                <AddUserToRoomModal roomId={roomId as string}>
+                  {({ handleOpen }) => (
+                    <IconButton aria-label="add-user-to-room" onClick={handleOpen}>
+                      <PersonAdd />
+                    </IconButton>
+                  )}
+                </AddUserToRoomModal>
+              }
             />
             <List
               style={{
@@ -102,6 +120,7 @@ function Messages() {
           </div>
         </Grid>
       </Grid>
+      <RoomUsersSidebar users={roomUsersData?.roomUsers} />
     </div>
   )
 }
@@ -109,6 +128,7 @@ function Messages() {
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
+    display: 'flex',
   },
 
   fab: {
