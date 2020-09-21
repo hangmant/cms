@@ -1,23 +1,26 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
-import { CardHeader, Grid, List, TextField, IconButton, Avatar } from '@material-ui/core'
+import { CardHeader, Grid, IconButton, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import { get } from 'lodash'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CREATE_MESSAGE_MUTATION } from '../../apollo/mutations'
 import { GET_MESSAGES, GET_MY_ROOMS, GET_ROOM, GET_ROOM_USERS } from '../../apollo/queries'
 import { MESSAGE_SUBSCRIPTION } from '../../apollo/subscriptions'
-import { ChatMessage } from '../../components/Messages/ChatMessage'
+import ChatMessageList, {
+  ChatMessageListFunctions,
+} from '../../components/Messages/ChatMessageList'
 import { ChatRooms } from '../../components/Messages/ChatRooms'
 import { ChatRoomsTitle } from '../../components/Messages/ChatRoomsTitle'
-import { withAuthentication } from '../../hoc/Authenticate'
 import { AddUserToRoomModal } from '../../components/Messages/modals/AddUserToRoom'
 import { RoomUsersSidebar } from '../../components/Messages/RoomUsersSidebar'
+import { withAuthentication } from '../../hoc/Authenticate'
 
 function Messages() {
   const classes = useStyles()
   const router = useRouter()
+  const messageListRef = useRef<ChatMessageListFunctions>(null)
   const [text, setText] = useState('')
 
   const { roomId } = router.query
@@ -32,6 +35,11 @@ function Messages() {
   const { data, subscribeToMore } = useQuery(GET_MESSAGES, {
     variables: {
       roomId,
+    },
+    onCompleted: () => {
+      try {
+        messageListRef.current.scrollToEnd()
+      } catch {}
     },
   })
 
@@ -51,6 +59,13 @@ function Messages() {
       },
       updateQuery: (previousData, { subscriptionData }) => {
         const newMessages = [...previousData.messages, subscriptionData.data.messageCreated]
+        setTimeout(() => {
+          try {
+            messageListRef.current.scrollToEnd()
+          } catch (error) {
+            console.log(error)
+          }
+        }, 10)
 
         return {
           messages: newMessages,
@@ -95,17 +110,7 @@ function Messages() {
                 </AddUserToRoomModal>
               }
             />
-            <List
-              style={{
-                height: 550,
-                overflowY: 'scroll',
-              }}
-              className="messages-here"
-            >
-              {messages.map(message => (
-                <ChatMessage key={message._id} message={message} />
-              ))}
-            </List>
+            <ChatMessageList ref={messageListRef} messages={messages} />
             <TextField
               placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
               value={text}
