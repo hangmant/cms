@@ -20,6 +20,8 @@ import { getCookie } from '../apis/session'
 import { NextProgress } from '../components/shared/NextProgress'
 import { defaultTheme } from '../themes/default'
 import { HttpStatus } from '../enums/http-status.enum'
+import 'emoji-mart/css/emoji-mart.css'
+
 import { config } from '../config/config'
 
 class MyApp extends App<{ apollo: ApolloClient<any> }> {

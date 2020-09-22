@@ -16,12 +16,12 @@ import { ChatRoomsTitle } from '../../components/Messages/ChatRoomsTitle'
 import { AddUserToRoomModal } from '../../components/Messages/modals/AddUserToRoom'
 import { RoomUsersSidebar } from '../../components/Messages/RoomUsersSidebar'
 import { withAuthentication } from '../../hoc/Authenticate'
+import { MessageInput } from '../../components/Messages/MessageInput'
 
 function Messages() {
   const classes = useStyles()
   const router = useRouter()
   const messageListRef = useRef<ChatMessageListFunctions>(null)
-  const [text, setText] = useState('')
 
   const { roomId } = router.query
   const { data: dataRoom } = useQuery(GET_ROOM, {
@@ -74,19 +74,15 @@ function Messages() {
     })
   }, [])
 
-  const handleChangeText = event => {
-    setText(event.target.value)
-  }
+  const messages = get(data, 'messages', [])
 
-  const handleKeyPress = async event => {
-    if (event.key === 'Enter') {
-      event.stopPropagation()
+  const handleSendText = async (text: string) => {
+    try {
       await createMessage({ variables: { data: { text, roomId } } })
-      setText('')
+    } catch (error) {
+      console.log('Dante: handleSendText -> error', error)
     }
   }
-
-  const messages = get(data, 'messages', [])
 
   return (
     <div className={classes.root}>
@@ -111,17 +107,7 @@ function Messages() {
               }
             />
             <ChatMessageList ref={messageListRef} messages={messages} />
-            <TextField
-              placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
-              value={text}
-              rowsMax={5}
-              onKeyPress={handleKeyPress}
-              onChange={handleChangeText}
-              fullWidth
-              multiline
-              id="outlined-basic"
-              variant="outlined"
-            />
+            <MessageInput handleSendText={handleSendText} />
           </div>
         </Grid>
       </Grid>
