@@ -4,7 +4,7 @@ import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'
 import { Picker } from 'emoji-mart'
 import PopupState, { bindPopover, bindTrigger, bindPopper } from 'material-ui-popup-state'
 import Popper from '@material-ui/core/Popper'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { MessageInputHelpModal } from './modals/MessageInputHelp'
 import Fade from '@material-ui/core/Fade'
 
@@ -14,6 +14,7 @@ type MessageInputProps = {
 
 export const MessageInput = ({ handleSendText }: MessageInputProps) => {
   const classes = useStyles()
+  const inputRef = useRef(null)
   const [text, setText] = useState('')
 
   const handleChangeText = event => {
@@ -36,6 +37,12 @@ export const MessageInput = ({ handleSendText }: MessageInputProps) => {
 
   const handleSelectEmoji = emoji => {
     setText(prevText => prevText + emoji.native)
+    setTimeout(() => {
+      inputRef.current?.focus()
+      const length = inputRef.current?.value?.length
+      inputRef.current?.focus()
+      inputRef.current?.setSelectionRange(length, length)
+    }, 20)
   }
 
   return (
@@ -44,6 +51,8 @@ export const MessageInput = ({ handleSendText }: MessageInputProps) => {
         placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
         value={text}
         rowsMax={5}
+        autoFocus
+        inputRef={inputRef}
         onKeyDown={handleKeyPress}
         onChange={handleChangeText}
         fullWidth
