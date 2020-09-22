@@ -1,11 +1,12 @@
-import { IconButton, makeStyles, TextField } from '@material-ui/core'
-import Popover from '@material-ui/core/Popover'
+import { IconButton, makeStyles, TextField, ClickAwayListener } from '@material-ui/core'
 import IconHelp from '@material-ui/icons/HelpOutline'
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'
 import { Picker } from 'emoji-mart'
-import PopupState, { bindPopover, bindTrigger } from 'material-ui-popup-state'
+import PopupState, { bindPopover, bindTrigger, bindPopper } from 'material-ui-popup-state'
+import Popper from '@material-ui/core/Popper'
 import React, { useState } from 'react'
 import { MessageInputHelpModal } from './modals/MessageInputHelp'
+import Fade from '@material-ui/core/Fade'
 
 type MessageInputProps = {
   handleSendText: (text: string) => void
@@ -38,67 +39,62 @@ export const MessageInput = ({ handleSendText }: MessageInputProps) => {
   }
 
   return (
-    <>
-      <div className={classes.container}>
-        <TextField
-          placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
-          value={text}
-          rowsMax={5}
-          onKeyDown={handleKeyPress}
-          onChange={handleChangeText}
-          fullWidth
-          multiline
-          id="outlined-basic"
-          variant="outlined"
-        />
+    <div className={classes.container}>
+      <TextField
+        placeholder="Click here to type a chat message. Supports GitHub flavoured markdown."
+        value={text}
+        rowsMax={5}
+        onKeyDown={handleKeyPress}
+        onChange={handleChangeText}
+        fullWidth
+        multiline
+        id="outlined-basic"
+        variant="outlined"
+      />
 
-        <div className={classes.helps}>
-          <MessageInputHelpModal>
-            {({ handleOpen }) => (
-              <>
-                <IconButton title="Help" onClick={handleOpen} aria-label="delete" size="small">
-                  <IconHelp fontSize="inherit" />
-                </IconButton>
-                <PopupState variant="popover" popupId="demo-popup-popover">
-                  {popupState => (
-                    <div>
-                      <IconButton
-                        title="Help"
-                        onClick={handleOpen}
-                        aria-label="delete"
-                        size="small"
-                        {...bindTrigger(popupState)}
-                      >
-                        <SentimentSatisfiedIcon fontSize="inherit" />
-                      </IconButton>
-
-                      <Popover
-                        {...bindPopover(popupState)}
-                        anchorOrigin={{
-                          vertical: 'top',
-                          horizontal: 'left',
-                        }}
-                        transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'left',
-                        }}
-                      >
-                        <Picker
-                          onSelect={handleSelectEmoji}
-                          showPreview={false}
-                          showSkinTones={false}
-                          // style={{ position: 'absolute', bottom: '20px', right: '20px' }}
-                        />
-                      </Popover>
-                    </div>
+      <div className={classes.helps}>
+        <MessageInputHelpModal>
+          {({ handleOpen }) => (
+            <IconButton title="Help" onClick={handleOpen} aria-label="delete" size="small">
+              <IconHelp fontSize="inherit" />
+            </IconButton>
+          )}
+        </MessageInputHelpModal>
+        <PopupState variant="popper" popupId="popup-emojis">
+          {popupState => (
+            <div>
+              <IconButton
+                title="Help"
+                aria-label="open-emojis"
+                size="small"
+                {...bindTrigger(popupState)}
+              >
+                <SentimentSatisfiedIcon fontSize="inherit" />
+              </IconButton>
+              <ClickAwayListener
+                mouseEvent="onMouseDown"
+                touchEvent="onTouchStart"
+                onClickAway={() => {
+                  setTimeout(popupState.close, 100)
+                }}
+              >
+                <Popper {...bindPopper(popupState)} transition>
+                  {({ TransitionProps }) => (
+                    <Fade {...TransitionProps} timeout={100}>
+                      <Picker
+                        onSelect={handleSelectEmoji}
+                        showPreview={false}
+                        showSkinTones={false}
+                      />
+                    </Fade>
                   )}
-                </PopupState>
-              </>
-            )}
-          </MessageInputHelpModal>
-        </div>
+                </Popper>
+              </ClickAwayListener>
+            </div>
+          )}
+        </PopupState>
       </div>
-    </>
+    </div>
   )
 }
 
