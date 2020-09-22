@@ -15,6 +15,8 @@ export const MESSAGE_SUBSCRIPTION = gql`
         __typename
       }
       roomId
+      createdAt
+      updatedAt
       __typename
     }
   }

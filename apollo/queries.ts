@@ -103,6 +103,8 @@ export const GET_MESSAGES = gql`
         email
         __typename
       }
+      createdAt
+      updatedAt
       __typename
     }
   }

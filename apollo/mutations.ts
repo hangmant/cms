@@ -152,6 +152,8 @@ export const CREATE_MESSAGE_MUTATION = gql`
         __typename
       }
       roomId
+      createdAt
+      updatedAt
       __typename
     }
   }

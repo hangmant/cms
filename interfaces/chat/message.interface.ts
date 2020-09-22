@@ -6,4 +6,6 @@ export interface Message {
   html: string
   fromUser: User
   roomId: string
+  createdAt: number
+  updatedAt: number
 }
