@@ -10,13 +10,12 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
-import { useFormik } from 'formik'
 import React, { useState } from 'react'
 import { useGetCountries } from '../../apollo/hooks/useGetCountries.hook'
+import { useFormikPartial } from '../../hooks/useFormikPartial'
 import { Country } from '../../interfaces/country.interface'
 import { User } from '../../interfaces/user.interface'
 import { countryCodeToFlag } from '../../utils/emojis.utils'
-import { deepDiffValues } from '../../utils/objects.utils'
 import ButtonLoader from '../ButtonLoader'
 
 type AccountDetailsProps = {
@@ -49,13 +48,11 @@ export const AccountDetails = (props: AccountDetailsProps) => {
     ...props.user,
   }
 
-  let formik
   const handleSubmit = values => {
-    let newValues = deepDiffValues(values, formik?.initialValues)
-    onUpdateUser(newValues)
+    onUpdateUser(values)
   }
 
-  formik = useFormik({
+  const formik = useFormikPartial({
     initialValues: user,
     onSubmit: handleSubmit,
     enableReinitialize: true,
