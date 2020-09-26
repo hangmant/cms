@@ -61,7 +61,7 @@ export const AccountDetails = (props: AccountDetailsProps) => {
   const values = formik.values
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={values => formik.handleSubmit(values)}>
         <CardHeader subheader="The information can be edited" title="Profile" />
         <Divider />
         <CardContent>
@@ -168,7 +168,7 @@ export const AccountDetails = (props: AccountDetailsProps) => {
             color="primary"
             variant="contained"
           >
-            Save
+            Save details
           </ButtonLoader>
         </CardActions>
       </form>
