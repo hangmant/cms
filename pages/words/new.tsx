@@ -58,7 +58,7 @@ const NewWord = () => {
             .min(1, 'Text should have almost 1 character')
             .max(20, 'Name length should be less than 20')
             .required('Name is required'),
-          categoryId: Yup.string('Category is required')
+          categoryId: Yup.string()
             .length(24, 'Invalid Category')
             .required('Category is required'),
         })}
