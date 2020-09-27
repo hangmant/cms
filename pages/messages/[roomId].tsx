@@ -20,9 +20,9 @@ import { MessageInput } from '../../components/Messages/MessageInput'
 import { AddUserToRoomModal } from '../../components/Messages/modals/AddUserToRoom'
 import { RoomUsersSidebar } from '../../components/Messages/RoomUsersSidebar'
 import { withAuthentication } from '../../hoc/Authenticate'
+import { UsersTypingIndicator } from '../../components/Messages/UsersTypingIndicator'
 
 function Messages({ user }) {
-  console.log('Dante: Messages -> user', user)
   const classes = useStyles()
   const router = useRouter()
   const messageListRef = useRef<ChatMessageListFunctions>(null)
@@ -97,9 +97,15 @@ function Messages({ user }) {
       if (data?.typingIndicatorChanged) {
         const { isTyping, user } = data.typingIndicatorChanged
         if (isTyping) {
-          setUsersTyping(prev => prev.concat(user))
+          setUsersTyping(prev => {
+            const existsUser = prev.find(({ _id }) => _id === user._id)
+            if (!existsUser) {
+              return prev.concat(user)
+            }
+            return prev
+          })
         } else {
-          setUsersTyping(prev => prev.filter(actualUser => actualUser._id !== user._id))
+          setUsersTyping(prev => prev.filter(({ _id }) => _id !== user._id))
         }
       }
     },
@@ -148,13 +154,7 @@ function Messages({ user }) {
               handleStopTyping={() => handleStartTyping(false)}
               handleSendText={handleSendText}
             />
-            <div>
-              {usersTyping
-                .filter(({ _id }) => _id !== user._id)
-                .map((userTyping, key) => (
-                  <p key={key}>{userTyping.name} is typing...</p>
-                ))}
-            </div>
+            <UsersTypingIndicator users={usersTyping} myUserId={user._id} />
           </div>
         </Grid>
       </Grid>

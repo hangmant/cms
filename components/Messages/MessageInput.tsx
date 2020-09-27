@@ -14,7 +14,7 @@ type MessageInputProps = {
   handleStopTyping: () => void
 }
 
-const TypingIndicatorDelay = 1600
+const TypingIndicatorDelay = 1200
 
 export const MessageInput = ({
   handleStartTyping,
@@ -42,10 +42,17 @@ export const MessageInput = ({
     }, TypingIndicatorDelay)
   }
 
+  const handleForceStopTyping = () => {
+    handleStopTyping()
+    clearTimeout(timeoutRef.current)
+    timeoutRef.current = null
+  }
+
   useEffect(() => {
     return () => {
+      // TODO: Fix, not working on reload page
       if (timeoutRef.current) {
-        handleStopTyping()
+        handleForceStopTyping()
       }
     }
   }, [])
@@ -56,9 +63,9 @@ export const MessageInput = ({
         setText(prevText => prevText + '\n')
         return
       }
-
       event.preventDefault()
       const textito = text
+      handleForceStopTyping()
       await handleSendText(textito)
       setText('')
       return
