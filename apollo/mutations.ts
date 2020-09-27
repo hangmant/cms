@@ -181,3 +181,9 @@ export const CREATE_ROOM_USER_MUTATION = gql`
     }
   }
 `
+
+export const CHANGE_TYPING_INDICATOR_MUTATION = gql`
+  mutation($roomId: ID!, $isTyping: Boolean!) {
+    changeTypingIndicator(roomId: $roomId, isTyping: $isTyping)
+  }
+`

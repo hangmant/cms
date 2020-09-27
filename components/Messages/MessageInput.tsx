@@ -1,25 +1,61 @@
-import { IconButton, makeStyles, TextField, ClickAwayListener } from '@material-ui/core'
+import { ClickAwayListener, IconButton, makeStyles, TextField } from '@material-ui/core'
+import Fade from '@material-ui/core/Fade'
+import Popper from '@material-ui/core/Popper'
 import IconHelp from '@material-ui/icons/HelpOutline'
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'
 import { Picker } from 'emoji-mart'
-import PopupState, { bindPopover, bindTrigger, bindPopper } from 'material-ui-popup-state'
-import Popper from '@material-ui/core/Popper'
-import React, { useState, useRef } from 'react'
+import PopupState, { bindPopper, bindTrigger } from 'material-ui-popup-state'
+import React, { useEffect, useRef, useState } from 'react'
 import { MessageInputHelpModal } from './modals/MessageInputHelp'
-import Fade from '@material-ui/core/Fade'
 
 type MessageInputProps = {
   handleSendText: (text: string) => void
+  handleStartTyping: () => void
+  handleStopTyping: () => void
 }
 
-export const MessageInput = ({ handleSendText }: MessageInputProps) => {
+const TypingIndicatorDelay = 1200
+
+export const MessageInput = ({
+  handleStartTyping,
+  handleStopTyping,
+  handleSendText,
+}: MessageInputProps) => {
   const classes = useStyles()
   const inputRef = useRef(null)
+  const timeoutRef = useRef(null)
   const [text, setText] = useState('')
 
   const handleChangeText = event => {
     setText(event.target.value)
   }
+
+  const setTyping = () => {
+    if (!timeoutRef.current) {
+      handleStartTyping()
+    } else {
+      clearTimeout(timeoutRef.current)
+    }
+    timeoutRef.current = setTimeout(() => {
+      handleStopTyping()
+      timeoutRef.current = null
+    }, TypingIndicatorDelay)
+  }
+
+  const handleForceStopTyping = () => {
+    handleStopTyping()
+    clearTimeout(timeoutRef.current)
+    timeoutRef.current = null
+  }
+
+  useEffect(() => {
+    return () => {
+      // TODO: Fix, not working on reload page
+      if (timeoutRef.current) {
+        handleForceStopTyping()
+      }
+    }
+  }, [])
 
   const handleKeyPress = async event => {
     if (event.keyCode === 13) {
@@ -27,12 +63,14 @@ export const MessageInput = ({ handleSendText }: MessageInputProps) => {
         setText(prevText => prevText + '\n')
         return
       }
-
       event.preventDefault()
       const textito = text
+      handleForceStopTyping()
       await handleSendText(textito)
       setText('')
+      return
     }
+    setTyping()
   }
 
   const handleSelectEmoji = emoji => {

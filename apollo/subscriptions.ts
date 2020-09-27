@@ -21,3 +21,15 @@ export const MESSAGE_SUBSCRIPTION = gql`
     }
   }
 `
+
+export const TYPING_INDICATOR_CHANGED_SUBSCRIPTION = gql`
+  subscription($roomId: ID!) {
+    typingIndicatorChanged(roomId: $roomId) {
+      user {
+        _id
+        name
+      }
+      isTyping
+    }
+  }
+`
