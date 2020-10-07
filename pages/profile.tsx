@@ -17,7 +17,7 @@ const Profile = () => {
   const [loadingUpdateUser, setLoadingUpdateUser] = useState(false)
   const { dispatchGlobal } = useContext(GlobalContext)
 
-  const user: User = data?.me
+  const user: User = data?.me ?? {}
 
   const handleUpdateMe = async (updateUserData: ReqUpdateUser) => {
     try {
