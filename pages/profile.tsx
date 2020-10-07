@@ -32,7 +32,7 @@ const Profile = () => {
         payload: updateUserData,
       })
     } catch {
-      console.error('Launch notify')
+      console.error('error', error)
     } finally {
       setLoadingUpdateUser(false)
     }
