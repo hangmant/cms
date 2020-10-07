@@ -9,5 +9,5 @@ export function deepDiffValues(newValues: object, initialValues: object = {}) {
   if (!initialValues || Object.keys(initialValues).length === 0) {
     return sanitizeMutation(newValues, ['_id', 'isEmailVerified'])
   }
-  return updatedDiff(initialValues, newValues)
+  return updatedDiff(initialValues, sanitizeMutation(newValues))
 }

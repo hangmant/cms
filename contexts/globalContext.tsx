@@ -1,12 +1,14 @@
 import React, { useReducer } from 'react'
 import { User } from '../interfaces/user.interface'
-import { globalContextReducer, GlobalState } from './reducers/global-context.reducer'
-import { useQuery } from '@apollo/react-hooks'
-import { ME } from '../apollo/queries'
+import {
+  globalContextReducer,
+  GlobalState,
+  GlobalAction,
+} from './reducers/global-context.reducer'
 
 type GlobalContextValue = {
   globalState: GlobalState
-  dispatchGlobalState: React.Dispatch<any>
+  dispatchGlobal: React.Dispatch<GlobalAction>
   user: User
 }
 
@@ -17,18 +19,15 @@ type GlobalContextProviderProps = {
 
 const GlobalContext = React.createContext<GlobalContextValue | undefined>(undefined)
 
-const initialState: GlobalState = {
-  totalRequests: 0,
-}
-
 function GlobalContextProvider({ children, user }: GlobalContextProviderProps) {
-  const [globalState, dispatchGlobalState] = useReducer(globalContextReducer, initialState)
-  const { data } = useQuery(ME)
+  const [globalState, dispatchGlobal] = useReducer(globalContextReducer, {
+    user,
+  } as GlobalState)
 
   const value: GlobalContextValue = {
     globalState,
-    dispatchGlobalState,
-    user: data?.me || user,
+    dispatchGlobal,
+    user: globalState.user,
   }
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

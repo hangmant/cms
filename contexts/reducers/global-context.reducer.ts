@@ -1,22 +1,27 @@
+import { User } from '../../interfaces/user.interface'
+
 export type GlobalState = {
-  totalRequests: number
+  user
 }
 
 export type GlobalAction = {
-  type: string
+  type: GlobalActionType
+  payload?: Partial<User> | object | any
+}
+
+export enum GlobalActionType {
+  UPDATE_USER = 'UPDATE_USER',
 }
 
 export function globalContextReducer(state: GlobalState, action: GlobalAction) {
   switch (action.type) {
-    case 'START_LOADING':
+    case GlobalActionType.UPDATE_USER:
       return {
         ...state,
-        totalRequests: state.totalRequests + 1,
-      }
-    case 'FINISH_LOADING':
-      return {
-        ...state,
-        totalRequests: state.totalRequests - 1,
+        user: {
+          ...state.user,
+          ...action?.payload,
+        },
       }
     default:
       return state
