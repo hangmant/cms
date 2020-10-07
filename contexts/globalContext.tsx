@@ -1,46 +1,34 @@
 import React, { useReducer } from 'react'
+import { User } from '../interfaces/user.interface'
+import { globalContextReducer, GlobalState } from './reducers/global-context.reducer'
+import { useQuery } from '@apollo/react-hooks'
+import { ME } from '../apollo/queries'
 
-type GlobalStateType = {
-  totalRequests: number
-}
-
-type GlobalContextType = {
-  globalState: GlobalStateType
+type GlobalContextValue = {
+  globalState: GlobalState
   dispatchGlobalState: React.Dispatch<any>
+  user: User
 }
 
-const GlobalContext = React.createContext<GlobalContextType | undefined>(undefined)
+type GlobalContextProviderProps = {
+  children: React.ElementRef<any>
+  user: User
+}
 
-const initialState: GlobalStateType = {
+const GlobalContext = React.createContext<GlobalContextValue | undefined>(undefined)
+
+const initialState: GlobalState = {
   totalRequests: 0,
 }
 
-type GlobalAction = {
-  type: string
-}
-
-const globalContextReducer = (state: GlobalStateType, action: GlobalAction) => {
-  switch (action.type) {
-    case 'START_LOADING':
-      return {
-        ...state,
-        totalRequests: state.totalRequests + 1,
-      }
-    case 'FINISH_LOADING':
-      return {
-        ...state,
-        totalRequests: state.totalRequests - 1,
-      }
-    default:
-      return state
-  }
-}
-
-const GlobalContextProvider = ({ children }) => {
+function GlobalContextProvider({ children, user }: GlobalContextProviderProps) {
   const [globalState, dispatchGlobalState] = useReducer(globalContextReducer, initialState)
-  const value = {
+  const { data } = useQuery(ME)
+
+  const value: GlobalContextValue = {
     globalState,
     dispatchGlobalState,
+    user: data?.me || user,
   }
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

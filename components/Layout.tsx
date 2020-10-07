@@ -18,26 +18,17 @@ type PersistentDrawerLeftProps = {
   user: User
 }
 
-export default function PersistentDrawerLeft({
-  children,
-  user,
-  ...props
-}: PersistentDrawerLeftProps) {
+export function Layout({ children, user }: PersistentDrawerLeftProps) {
   const [open, setOpen] = useLocalStorage('sidebar_open', true)
   const classes = useStyles({
     open,
   })
 
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
-
-  const handleDrawerClose = () => {
-    setOpen(false)
-  }
+  const handleDrawerOpen = () => setOpen(true)
+  const handleDrawerClose = () => setOpen(false)
 
   return (
-    <GlobalContextProvider>
+    <GlobalContextProvider user={user}>
       <div className={classes.root}>
         <CssBaseline />
         <AppBar position="fixed" className={clsx(classes.appBar)}>
@@ -56,7 +47,7 @@ export default function PersistentDrawerLeft({
             </Typography>
           </Toolbar>
         </AppBar>
-        <Sidebar user={user} open={open} onClose={handleDrawerClose} />
+        <Sidebar open={open} onClose={handleDrawerClose} />
         <main className={clsx(classes.content)}>
           <div className={classes.drawerHeader} />
           {children}
@@ -108,7 +99,5 @@ const useStyles = makeStyles<Theme, { open: boolean }>(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
           }),
-    // TODO: solve animation
-    // marginLeft: props => (props.open ? 0 : -0),
   },
 }))

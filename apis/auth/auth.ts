@@ -1,10 +1,9 @@
-import { window } from 'browser-monads'
 import fetch from 'isomorphic-fetch'
 import { User } from '../../interfaces/user.interface'
 import { config } from '../../config/config'
 import { getCookie } from '../session'
 
-export const isAuthenticated = async (token): Promise<User> => {
+export const isAuthenticated = async (token: string): Promise<User> => {
   const response = await fetch(`${config.hangwomanApiREST}/users/me`, {
     method: 'GET',
     headers: {
