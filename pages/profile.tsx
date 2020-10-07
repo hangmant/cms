@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/react-hooks'
 import { Grid } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { ME } from '../apollo/queries'
 import { AccountDetails } from '../components/Account/AccountDetails'
 import { AccountProfile } from '../components/Account/AccountProfile'
@@ -8,24 +8,31 @@ import { withAuthentication } from '../hoc/Authenticate'
 import { User } from '../interfaces/user.interface'
 import { UPDATE_ME_MUTATION } from '../apollo/mutations'
 import { ReqUpdateUser } from '../interfaces/req-update-user.interface'
+import { GlobalContext } from '../contexts/globalContext'
+import { GlobalActionType } from '../contexts/reducers/global-context.reducer'
 
 const Profile = () => {
   const { data } = useQuery(ME)
   const [updateMeMutation] = useMutation(UPDATE_ME_MUTATION)
   const [loadingUpdateUser, setLoadingUpdateUser] = useState(false)
+  const { dispatchGlobal } = useContext(GlobalContext)
 
   const user: User = data?.me ?? {}
 
-  const handleUpdateMe = async (user: ReqUpdateUser) => {
+  const handleUpdateMe = async (updateUserData: ReqUpdateUser) => {
     try {
       setLoadingUpdateUser(true)
       await updateMeMutation({
         variables: {
-          data: user,
+          data: updateUserData,
         },
       })
-    } catch {
-      console.error('Launch notify')
+      dispatchGlobal({
+        type: GlobalActionType.UPDATE_USER,
+        payload: updateUserData,
+      })
+    } catch (error) {
+      console.error('Error on update me', error)
     } finally {
       setLoadingUpdateUser(false)
     }

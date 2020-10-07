@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import { get } from 'lodash'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import { CREATE_MESSAGE_MUTATION, CHANGE_TYPING_INDICATOR_MUTATION } from '../../apollo/mutations'
 import { GET_MESSAGES, GET_MY_ROOMS, GET_ROOM, GET_ROOM_USERS } from '../../apollo/queries'
 import {
@@ -21,12 +21,15 @@ import { AddUserToRoomModal } from '../../components/Messages/modals/AddUserToRo
 import { RoomUsersSidebar } from '../../components/Messages/RoomUsersSidebar'
 import { withAuthentication } from '../../hoc/Authenticate'
 import { UsersTypingIndicator } from '../../components/Messages/UsersTypingIndicator'
+import { GlobalContext } from '../../contexts/globalContext'
 
-function Messages({ user }) {
+function Messages() {
   const classes = useStyles()
   const router = useRouter()
   const messageListRef = useRef<ChatMessageListFunctions>(null)
   const [usersTyping, setUsersTyping] = useState([])
+
+  const { user } = useContext(GlobalContext)
 
   const { roomId } = router.query
   const { data: dataRoom } = useQuery(GET_ROOM, {

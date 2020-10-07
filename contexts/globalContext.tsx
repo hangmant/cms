@@ -1,46 +1,33 @@
 import React, { useReducer } from 'react'
+import { User } from '../interfaces/user.interface'
+import {
+  globalContextReducer,
+  GlobalState,
+  GlobalAction,
+} from './reducers/global-context.reducer'
 
-type GlobalStateType = {
-  totalRequests: number
+type GlobalContextValue = {
+  globalState: GlobalState
+  dispatchGlobal: React.Dispatch<GlobalAction>
+  user: User
 }
 
-type GlobalContextType = {
-  globalState: GlobalStateType
-  dispatchGlobalState: React.Dispatch<any>
+type GlobalContextProviderProps = {
+  children: React.ElementRef<any>
+  user: User
 }
 
-const GlobalContext = React.createContext<GlobalContextType | undefined>(undefined)
+const GlobalContext = React.createContext<GlobalContextValue | undefined>(undefined)
 
-const initialState: GlobalStateType = {
-  totalRequests: 0,
-}
+function GlobalContextProvider({ children, user }: GlobalContextProviderProps) {
+  const [globalState, dispatchGlobal] = useReducer(globalContextReducer, {
+    user,
+  } as GlobalState)
 
-type GlobalAction = {
-  type: string
-}
-
-const globalContextReducer = (state: GlobalStateType, action: GlobalAction) => {
-  switch (action.type) {
-    case 'START_LOADING':
-      return {
-        ...state,
-        totalRequests: state.totalRequests + 1,
-      }
-    case 'FINISH_LOADING':
-      return {
-        ...state,
-        totalRequests: state.totalRequests - 1,
-      }
-    default:
-      return state
-  }
-}
-
-const GlobalContextProvider = ({ children }) => {
-  const [globalState, dispatchGlobalState] = useReducer(globalContextReducer, initialState)
-  const value = {
+  const value: GlobalContextValue = {
     globalState,
-    dispatchGlobalState,
+    dispatchGlobal,
+    user: globalState.user,
   }
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>

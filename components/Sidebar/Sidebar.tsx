@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/react-hooks'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import IconButton from '@material-ui/core/IconButton'
@@ -7,38 +7,30 @@ import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import React from 'react'
+import React, { useContext } from 'react'
 import { removeCookie } from '../../apis/session'
+import { GlobalContext } from '../../contexts/globalContext'
 import { noop } from '../../utils/shared.utils'
 import { Profile } from './child/Profile'
 import SidebarItem from './child/SidebarItem'
 import SidebarNav from './child/SidebarNav'
 import { SIDEBAR_WIDTH } from './sidebar.constants'
-import { User } from '../../interfaces/user.interface'
-import { ME } from '../../apollo/queries'
 
 type SidebarProps = {
   open?: boolean
-  user: User
   onClose?: Function
 }
 
-export const Sidebar = ({ open = false, user: authUser, onClose = noop }: SidebarProps) => {
+export const Sidebar = ({ open = false, onClose = noop }: SidebarProps) => {
   const classes = useStyles({ open })
   const theme = useTheme()
   const client = useApolloClient()
-  const { data } = useQuery(ME)
+  const { user } = useContext(GlobalContext)
 
-  const user: User = data?.me ?? authUser
-
-  const handleClose = () => {
-    onClose(false)
-  }
+  const handleClose = () => onClose(false)
 
   const handleLogout = () => {
-    console.log('Removing cookie and reset store')
     removeCookie('jwt')
-    // Router.replace('/login')
     client.restore({})
     client.resetStore()
   }
