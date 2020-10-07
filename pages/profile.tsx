@@ -31,8 +31,8 @@ const Profile = () => {
         type: GlobalActionType.UPDATE_USER,
         payload: updateUserData,
       })
-    } catch {
-      console.error('error', error)
+    } catch (error) {
+      console.error('Error on update me', error)
     } finally {
       setLoadingUpdateUser(false)
     }
