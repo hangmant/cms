@@ -19,7 +19,7 @@ type ChatRoomsProps = {
 export function ChatRoomsItem({ room }: ChatRoomsProps) {
   const classes = useStyles({ isActive: room._id })
   return (
-    <NextLink href={`/messages/${room._id}`} passHref>
+    <NextLink href={`/messages/[roomId]`} as={`/messages/${room._id}`}>
       <ListItem divider button>
         <ListItemAvatar className={classes.avatarSmall}>
           <Badge
