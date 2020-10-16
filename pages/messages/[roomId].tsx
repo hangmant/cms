@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import PersonAdd from '@material-ui/icons/PersonAdd'
 import { get } from 'lodash'
 import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useRef, useState, useContext } from 'react'
 import { CREATE_MESSAGE_MUTATION, CHANGE_TYPING_INDICATOR_MUTATION } from '../../apollo/mutations'
 import { GET_MESSAGES, GET_MY_ROOMS, GET_ROOM, GET_ROOM_USERS } from '../../apollo/queries'
 import {
@@ -40,7 +40,7 @@ function Messages() {
 
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION)
 
-  const { data, subscribeToMore } = useQuery(GET_MESSAGES, {
+  const { data } = useQuery(GET_MESSAGES, {
     variables: {
       roomId,
     },
@@ -59,14 +59,18 @@ function Messages() {
 
   const { data: roomsData } = useQuery(GET_MY_ROOMS)
 
-  useEffect(() => {
-    subscribeToMore({
-      document: MESSAGE_SUBSCRIPTION,
-      variables: {
-        roomId,
-      },
-      updateQuery: (previousData, { subscriptionData }) => {
-        const newMessages = [...previousData.messages, subscriptionData.data.messageCreated]
+  useSubscription(MESSAGE_SUBSCRIPTION, {
+    variables: { roomId },
+    onSubscriptionData: ({ client, subscriptionData: { data } }) => {
+      try {
+        const { messages } = client.readQuery({ query: GET_MESSAGES, variables: { roomId } })
+        messages.concat(data.messageCreated)
+        client.writeQuery({
+          variables: { roomId },
+          query: GET_MESSAGES,
+          data: { messages: messages.concat(data.messageCreated) },
+        })
+
         setTimeout(() => {
           try {
             messageListRef.current.scrollToEnd()
@@ -74,13 +78,11 @@ function Messages() {
             console.log(error)
           }
         }, 10)
-
-        return {
-          messages: newMessages,
-        }
-      },
-    })
-  }, [])
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  })
 
   const messages = get(data, 'messages', [])
 
