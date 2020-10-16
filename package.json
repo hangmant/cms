@@ -6,6 +6,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start -p $PORT",
+    "start:dev": "yarn dev", 
     "test": "echo 1;",
     "test:jest": "jest",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
