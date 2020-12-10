@@ -8,6 +8,7 @@ import {
   LinearProgress,
   Theme,
   Typography,
+  useScrollTrigger,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import clsx from 'clsx'
@@ -59,7 +60,7 @@ export const AccountProfile = (props: AccountProfileProps) => {
       </CardContent>
       <Divider />
       <CardActions>
-        <ChangeAvatar onUpdateAvatar={onUpdateAvatar}>
+        <ChangeAvatar userId={user._id} onUpdateAvatar={onUpdateAvatar}>
           <Button
             component="span"
             className={classes.uploadButton}

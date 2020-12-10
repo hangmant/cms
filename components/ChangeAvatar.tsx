@@ -9,6 +9,7 @@ import {
   withStyles,
 } from '@material-ui/core'
 import axios from 'axios'
+import { config } from '../config/config'
 import { useSnackbar } from 'notistack'
 import React, { useRef, useState } from 'react'
 import AvatarEditor from 'react-avatar-editor'
@@ -20,10 +21,11 @@ export const validImageExtensions = ['image/jpeg', 'image/png', 'image/webp', 'i
 
 type ChangeAvatarProps = {
   children?: React.ReactChild
+  userId: string
   onUpdateAvatar: (avatarUrl: string) => Promise<any>
 }
 
-export const ChangeAvatar = ({ children, onUpdateAvatar }: ChangeAvatarProps) => {
+export const ChangeAvatar = ({ children, userId, onUpdateAvatar }: ChangeAvatarProps) => {
   const { enqueueSnackbar } = useSnackbar()
   const [open, setOpen] = useState<boolean>(false)
   const [scale, setScale] = useState<number>(1.0)
@@ -64,26 +66,27 @@ export const ChangeAvatar = ({ children, onUpdateAvatar }: ChangeAvatarProps) =>
     try {
       if (editor) {
         const canvas = editor.current.getImage().toDataURL()
-        const imageFile = await dataURLToFile(canvas, 'avatar.png', 'image/png')
+        const imageFile = await dataURLToFile(canvas, `image.png`, 'image/png')
 
+        const filename = generateFileName(userId)
         const { url } = await generateStorageToken(
           {
             contentType: imageFile.type,
-            key: generateFileName(imageFile),
+            key: filename
           },
           getCookieFromBrowser('jwt')
         )
 
-        await axios.put(url, imageFile, {
+       await axios.put(url, imageFile, {
           headers: {
             'x-amz-acl': 'public-read',
             'Content-Type': imageFile.type,
           },
         })
 
-        const urlS3 = url.substr(0, url.indexOf('?'))
+        const urlCloudfront = `${config.hangwomanCloudfrontURL}/${filename}`
 
-        await onUpdateAvatar(urlS3)
+        await onUpdateAvatar(urlCloudfront)
         enqueueSnackbar('Avatar successful updated')
         handleClose()
       } else {

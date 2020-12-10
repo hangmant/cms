@@ -1,16 +1,16 @@
+import Slugify from 'seo-friendly-slugify'
+
+const s = new Slugify()
+
 export function fileSizeIsBetween(bytes: number, from: number, to: number): boolean {
   const kB = bytes / 1024
   return kB >= from && kB < to
 }
 
-export const generateFileName = (file: File) => {
-  let getDate = new Date()
-  let timestamp = getDate.toISOString()
-  timestamp = timestamp.replace(/:/g, '-')
-  timestamp = timestamp.replace(/\./g, '-')
-
-  return timestamp + file.name.replace(/ /g, '_')
+export const generateFileName = (userId: string, ext = '.png') => {
+  return `avatars/${userId}/${s.slugify(new Date().toISOString())}${ext}`
 }
+
 
 export const dataURLToFile = (
   dataURL: string,

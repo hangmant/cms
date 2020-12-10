@@ -6,7 +6,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start -p $PORT",
-    "start:dev": "yarn dev", 
+    "start:dev": "yarn dev",
     "test": "echo 1;",
     "test:jest": "jest",
     "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
@@ -52,6 +52,7 @@
     "react-avatar-editor": "^11.0.9",
     "react-color": "^2.18.0",
     "react-dom": "latest",
+    "seo-friendly-slugify": "^1.0.5",
     "sinon": "^9.0.2",
     "styled-components": "^5.1.0",
     "subscriptions-transport-ws": "^0.9.17",
