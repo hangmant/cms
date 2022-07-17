@@ -88,7 +88,7 @@ const wsLink = process.browser
       options: {
         reconnect: true,
         connectionParams: {
-          authorization: `Bearer ${getCookie('jwt')}`,
+          authorization: getCookie('jwt'),
         },
       },
     })
